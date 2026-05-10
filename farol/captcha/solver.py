@@ -43,9 +43,11 @@ class CaptchaResult:
 
 
 _OCR_PROMPT = (
-    "You are looking at a CAPTCHA image. Read the text shown and reply with JSON "
-    'of the form {"text": "...", "confidence": 0.0-1.0}. '
-    "Do not add any other commentary."
+    "You are looking at a CAPTCHA image containing a short string of letters and digits. "
+    "Read every character carefully, left to right. Preserve case exactly as shown. "
+    "Do NOT add spaces, punctuation, quotes, or trailing characters that aren't visible. "
+    "Reply with strict JSON only: "
+    '{"text": "<exactly the characters>", "confidence": 0.0-1.0}'
 )
 
 _GRID_PROMPT = (
@@ -71,8 +73,12 @@ class CaptchaSolver:
         Per backend. Total worst-case attempts across the chain is
         ``2 * max_attempts`` (Tesseract + vision LLM).
     prefer_tesseract
-        Default True — try the cheap CPU OCR before the LLM. Set False to
-        force vision-LLM only (useful for testing).
+        Default False — empirically, Tesseract fails on adversarial
+        distortions (rotation + noise + scribble lines that real CAPTCHAs
+        use). Set True only if you know your target CAPTCHAs are
+        clean-text on a clean background (rare). When False *and* no
+        ``vision_llm`` is set, Tesseract is still tried as a
+        last-resort fallback — better than nothing.
     """
 
     SUPPORTED: ClassVar[set[str]] = {"text", "image_grid"}
@@ -83,7 +89,7 @@ class CaptchaSolver:
         *,
         min_confidence: float = 0.7,
         max_attempts: int = 2,
-        prefer_tesseract: bool = True,
+        prefer_tesseract: bool = False,
     ):
         self.llm = vision_llm
         self.min_confidence = min_confidence
@@ -116,35 +122,60 @@ class CaptchaSolver:
     # ------------------------------------------------------------------
 
     def _solve_text(self, image: bytes, *, mime: str) -> CaptchaResult:
+        """Routing:
+
+        * ``prefer_tesseract=True``   — Tesseract first, vision LLM as fallback.
+        * ``prefer_tesseract=False`` (default) — vision LLM first; if missing
+          or if it fails, fall back to Tesseract as a last resort.
+        """
         best = CaptchaResult(solved=False, kind="text")
 
         if self.prefer_tesseract:
-            try:
-                from .tesseract import is_available, solve_text
-
-                if is_available():
-                    r = solve_text(image, min_confidence=self.min_confidence)
-                    r.solver = "tesseract"
-                    if r.solved:
-                        return r
-                    if r.confidence > best.confidence:
-                        best = r
-                    log.info(
-                        "Tesseract returned low confidence (%.2f); "
-                        "escalating to vision LLM if available.",
-                        r.confidence,
-                    )
-            except Exception as e:
-                log.warning("Tesseract backend errored: %s", e)
-
-        if self.llm is None:
+            tess_result = self._try_tesseract(image)
+            if tess_result is not None:
+                if tess_result.solved:
+                    return tess_result
+                if tess_result.confidence > best.confidence:
+                    best = tess_result
+            if self.llm is not None:
+                llm_result = self._solve_with_vision(image, kind="text", mime=mime)
+                if llm_result.solved or llm_result.confidence > best.confidence:
+                    return llm_result
             best.reason = best.reason or "no_backend_available"
             return best
 
-        llm_result = self._solve_with_vision(image, kind="text", mime=mime)
-        if llm_result.solved or llm_result.confidence > best.confidence:
-            return llm_result
+        # Default path: vision LLM first, Tesseract as fallback.
+        if self.llm is not None:
+            llm_result = self._solve_with_vision(image, kind="text", mime=mime)
+            if llm_result.solved:
+                return llm_result
+            if llm_result.confidence > best.confidence:
+                best = llm_result
+
+        tess_result = self._try_tesseract(image)
+        if tess_result is not None:
+            if tess_result.solved:
+                return tess_result
+            if tess_result.confidence > best.confidence:
+                best = tess_result
+
+        if best.solver == "":
+            best.reason = best.reason or "no_backend_available"
         return best
+
+    def _try_tesseract(self, image: bytes) -> CaptchaResult | None:
+        """Return Tesseract's best guess, or ``None`` if it isn't installed."""
+        try:
+            from .tesseract import is_available, solve_text
+
+            if not is_available():
+                return None
+            r = solve_text(image, min_confidence=self.min_confidence)
+            r.solver = "tesseract"
+            return r
+        except Exception as e:
+            log.warning("Tesseract backend errored: %s", e)
+            return None
 
     def _solve_with_vision(
         self,

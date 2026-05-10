@@ -31,10 +31,10 @@ class _FakeVisionLLM:
 # ----------------------------------------------------------------------
 
 
-def test_text_uses_tesseract_first_when_available():
-    """If Tesseract is available and returns high confidence, no LLM call happens."""
+def test_text_uses_tesseract_first_when_preferred():
+    """Opt-in: prefer_tesseract=True → Tesseract resolves before the LLM is touched."""
     fake_llm = _FakeVisionLLM('{"text":"WRONG","confidence":0.99}')
-    solver = CaptchaSolver(vision_llm=fake_llm, min_confidence=0.5)
+    solver = CaptchaSolver(vision_llm=fake_llm, min_confidence=0.5, prefer_tesseract=True)
 
     with (
         patch("farol.captcha.tesseract.is_available", return_value=True),
@@ -50,13 +50,32 @@ def test_text_uses_tesseract_first_when_available():
     assert result.solved
     assert result.text == "ABC123"
     assert result.solver == "tesseract"
-    assert fake_llm.calls == 0  # LLM never touched
+    assert fake_llm.calls == 0
+
+
+def test_default_uses_vision_llm_first():
+    """Default (prefer_tesseract=False): vision LLM goes first; Tesseract not called when LLM solves."""
+    fake_llm = _FakeVisionLLM('{"text":"FROM_LLM","confidence":0.95}')
+    solver = CaptchaSolver(vision_llm=fake_llm, min_confidence=0.5)  # prefer_tesseract default = False
+
+    with (
+        patch("farol.captcha.tesseract.is_available", return_value=True) as ta,
+        patch("farol.captcha.tesseract.solve_text") as ts,
+    ):
+        result = solver.solve(b"<image-bytes>", kind="text")
+
+    assert result.solved
+    assert result.text == "FROM_LLM"
+    assert result.solver == "vision_llm"
+    # Tesseract should not have been queried at all when LLM solves
+    assert ta.call_count == 0
+    ts.assert_not_called()
 
 
 def test_text_escalates_to_llm_when_tesseract_unconfident():
-    """Tesseract returns low confidence → vision LLM picks up."""
+    """prefer_tesseract=True: Tesseract returns low confidence → vision LLM picks up."""
     fake_llm = _FakeVisionLLM('{"text":"BETTER","confidence":0.92}')
-    solver = CaptchaSolver(vision_llm=fake_llm, min_confidence=0.7)
+    solver = CaptchaSolver(vision_llm=fake_llm, min_confidence=0.7, prefer_tesseract=True)
 
     with (
         patch("farol.captcha.tesseract.is_available", return_value=True),
@@ -75,6 +94,27 @@ def test_text_escalates_to_llm_when_tesseract_unconfident():
     assert fake_llm.calls == 1
 
 
+def test_default_falls_back_to_tesseract_when_llm_fails():
+    """Default chain: vision LLM returns low conf → Tesseract used as fallback."""
+    fake_llm = _FakeVisionLLM('{"text":"weak","confidence":0.20}')
+    solver = CaptchaSolver(vision_llm=fake_llm, min_confidence=0.7)  # default prefer_tesseract=False
+
+    with (
+        patch("farol.captcha.tesseract.is_available", return_value=True),
+        patch(
+            "farol.captcha.tesseract.solve_text",
+            return_value=CaptchaResult(
+                solved=True, text="GOOD", confidence=0.85, kind="text", solver="tesseract"
+            ),
+        ),
+    ):
+        result = solver.solve(b"<image-bytes>", kind="text")
+
+    assert result.solved
+    assert result.text == "GOOD"
+    assert result.solver == "tesseract"
+
+
 def test_text_returns_best_when_no_llm_and_tesseract_weak():
     """No LLM + weak Tesseract → return Tesseract's result, marked unsolved."""
     solver = CaptchaSolver(vision_llm=None, min_confidence=0.7)
@@ -91,7 +131,7 @@ def test_text_returns_best_when_no_llm_and_tesseract_weak():
         result = solver.solve(b"<image-bytes>", kind="text")
 
     assert not result.solved
-    assert result.text == "weak"  # we keep what we got
+    assert result.text == "weak"
     assert result.solver == "tesseract"
 
 
@@ -105,7 +145,7 @@ def test_text_skips_tesseract_when_unavailable():
 
 
 def test_prefer_tesseract_false_skips_to_llm():
-    """``prefer_tesseract=False`` goes straight to the vision LLM."""
+    """``prefer_tesseract=False`` (default): when the LLM solves, Tesseract is not queried."""
     fake_llm = _FakeVisionLLM('{"text":"DIRECT","confidence":0.95}')
     solver = CaptchaSolver(vision_llm=fake_llm, prefer_tesseract=False, min_confidence=0.5)
 
@@ -114,7 +154,7 @@ def test_prefer_tesseract_false_skips_to_llm():
 
     assert result.solved
     assert result.solver == "vision_llm"
-    # Tesseract availability check should never run when we don't prefer it
+    # Tesseract availability check should never run when the LLM already solved.
     assert is_avail.call_count == 0
 
 
