@@ -64,6 +64,12 @@ Thumbs.db
 *.sqlite
 *.sqlite3
 
+# test scratch dirs and logs
+test-cache*/
+test-*-output*.log
+smoke-output.log
+*.log
+
 # Playwright
 playwright-report/
 test-results/
