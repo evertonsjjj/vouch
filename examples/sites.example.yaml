@@ -1,0 +1,27 @@
+# Example catalog. Copy to sites.yaml and edit.
+defaults:
+  llm: ollama/qwen2.5:14b
+  router_strategy: llm
+  default_depth: 1
+  humanize: true
+
+sites:
+  - url: cvm.gov.br
+    category: regulação financeira BR
+    description: Comissão de Valores Mobiliários — regulamentos, deliberações, consultas públicas
+    tags: [gov, financeiro, regulação]
+
+  - url: arxiv.org
+    category: papers acadêmicos
+    description: Preprints em CS, math, physics, biology
+    tags: [research, ml, ai]
+
+  - url: news.ycombinator.com
+    category: discussão tech
+    tags: [tech, discussion]
+
+  - url: github.com
+    category: código
+    description: Repositórios, issues, releases
+    tags: [code, dev]
+    search_url_template: "/search?q={query}&type=repositories"
