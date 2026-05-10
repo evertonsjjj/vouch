@@ -41,7 +41,13 @@ _LAUNCH_LOCK = threading.Semaphore(_MAX_PARALLEL_BROWSERS)
 
 
 class BrowserAdapter(SiteAdapter):
-    """Discovers selectors via LLM the first time, caches them per (domain, dom-fingerprint)."""
+    """Discovers selectors via LLM the first time, caches them per (domain, dom-fingerprint).
+
+    When ``pool`` is set (provided by the engine when ``use_browser_pool=True``),
+    every search runs against a long-lived Playwright/Chromium hosted on a
+    dedicated background thread. Otherwise we fall back to launching a fresh
+    browser per search — slower and more memory-hungry but more isolated.
+    """
 
     behavior: str = "natural"
 
@@ -51,6 +57,7 @@ class BrowserAdapter(SiteAdapter):
         config: EngineConfig | None = None,
         llm: Any = None,
         selector_cache: Any = None,
+        pool: Any = None,
     ):
         if not _PLAYWRIGHT_AVAILABLE:
             raise ImportError(
@@ -60,18 +67,30 @@ class BrowserAdapter(SiteAdapter):
         self.config = config or EngineConfig()
         self.llm = llm
         self.cache = selector_cache  # SelectorCache or None
+        self.pool = pool  # BrowserPool | None
         self._loop: asyncio.AbstractEventLoop | None = None
 
-    # Sync facade -- runs the async pipeline on a private loop.
     def search(self, ctx: AdapterContext) -> list[Chunk]:
-        # Gate launches so we never exceed the global concurrency budget.
+        # Pool path — runs on the shared loop, no per-call browser launch.
+        if self.pool is not None:
+            return self.pool.run_coro(
+                self._search_async_pool(ctx),
+                timeout=max(ctx.timeout * 3 + 30, 60),
+            )
+        # Legacy path — fresh Playwright per call, gated by the global semaphore.
         with _LAUNCH_LOCK:
             return _run_sync(self._search_async(ctx))
 
     def close(self) -> None:
-        pass  # Each search uses a fresh playwright lifecycle.
+        pass  # Pool lifecycle is owned by the engine.
 
-    # --- async pipeline -------------------------------------------------
+    # --- async pipeline (pool-backed) -----------------------------------
+
+    async def _search_async_pool(self, ctx: AdapterContext) -> list[Chunk]:
+        async with self.pool.page(user_agent=self.config.user_agent) as page:
+            return await self._do_search(page, ctx)
+
+    # --- async pipeline (legacy, fresh-browser) -------------------------
 
     async def _search_async(self, ctx: AdapterContext) -> list[Chunk]:
         async with self._browser() as (_pw, browser):

@@ -7,6 +7,41 @@ this project follows [Semantic Versioning](https://semver.org/).
 
 ## [0.2.0] — 2026-05-10
 
+### Renamed
+
+- **Package renamed from ``curio`` to ``farol``** to avoid conflict with the
+  existing ``curio`` async library on PyPI. The old ``CurioError`` exception
+  is kept as a back-compat alias of ``FarolError`` and will be removed in
+  v1.0. Update your imports::
+
+      # before
+      from curio import SearchEngine
+      # after
+      from farol import SearchEngine
+
+### Added (continued)
+
+- **Browser pool** — one long-lived Chromium process per engine, shared
+  across every search. Eliminates the per-call launch overhead (~3-8 s warm,
+  worse cold) and the Windows stability issues from forking many Chromium
+  instances. Opt-in via ``use_browser_pool=True`` (default on); set False to
+  fall back to the v0.1 "fresh browser per search" path. Engine adds
+  ``close()`` / context-manager protocol for explicit teardown.
+- **Plugin model via entry_points** — three discovery groups:
+    - ``farol.adapters`` — per-host SiteAdapter implementations
+      (``arxiv.org`` exact, ``*.gov.br`` suffix, or ``*`` fallback).
+    - ``farol.routers`` — alternative router strategies.
+    - ``farol.profiles`` — community ProfileRegistry bundles.
+  Third parties can ``pip install farol-adapter-arxiv`` and the next
+  ``SearchEngine`` picks it up. See ``docs/plugins.md`` for the contract.
+  CLI: ``farol plugins list``.
+- **Profile auto-update** — ``farol profiles update`` fetches the latest
+  community registry from a configurable URL (default
+  ``github.com/yourhandle/farol-profiles``), validates the YAML, and merges
+  it on top of the bundled ``builtin.yaml``. Honors HTTP caching
+  (ETag / If-Modified-Since) and falls back gracefully to the bundled
+  profiles on any network failure.
+
 ### Added
 
 - **CSS selector pinning** — the result-extraction LLM now examines DOM context

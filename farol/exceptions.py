@@ -3,19 +3,24 @@
 from __future__ import annotations
 
 
-class CurioError(Exception):
+class FarolError(Exception):
     """Base for all farol errors."""
 
 
-class CatalogError(CurioError):
+# Back-compat alias for v0.1 users who imported ``CurioError``. Will be
+# removed in v1.0.
+CurioError = FarolError
+
+
+class CatalogError(FarolError):
     """Catalog persistence or validation failed."""
 
 
-class RouterError(CurioError):
+class RouterError(FarolError):
     """Routing failed (LLM, embedding, or filter)."""
 
 
-class AdapterError(CurioError):
+class AdapterError(FarolError):
     """Site adapter failed (network, parsing, browser)."""
 
 
@@ -36,5 +41,5 @@ class ExtractionError(AdapterError):
     """Content extraction failed."""
 
 
-class LLMError(CurioError):
+class LLMError(FarolError):
     """Underlying LLM call failed after retries/fallbacks."""

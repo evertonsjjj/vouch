@@ -23,9 +23,11 @@ app = typer.Typer(
 catalog_app = typer.Typer(help="Manage the site catalog.", no_args_is_help=True)
 mcp_app = typer.Typer(help="Run farol as an MCP server.", no_args_is_help=True)
 profiles_app = typer.Typer(help="Browse curated site profiles.", no_args_is_help=True)
+plugins_app = typer.Typer(help="Inspect installed third-party plugins.", no_args_is_help=True)
 app.add_typer(catalog_app, name="catalog")
 app.add_typer(mcp_app, name="mcp")
 app.add_typer(profiles_app, name="profiles")
+app.add_typer(plugins_app, name="plugins")
 console = Console()
 
 
@@ -285,6 +287,77 @@ def profiles_import(
         added += 1
         console.print(f"[green]+[/green] {site.url}")
     console.print(f"\n[bold]{added}[/bold] profile(s) imported.")
+
+
+@profiles_app.command("update")
+def profiles_update(
+    source: str = typer.Option(
+        None, "--source", "-s", help="Override the registry URL (env: FAROL_PROFILES_URL)"
+    ),
+    force: bool = typer.Option(False, "--force", help="Skip ETag check and re-download"),
+):
+    """Fetch the latest community profile registry."""
+    from .profiles.update import DEFAULT_URL, update_profiles
+
+    url = source or DEFAULT_URL
+    console.print(f"Fetching profiles from [cyan]{url}[/cyan]...")
+    summary = update_profiles(url=url, force=force)
+
+    status = summary.get("status")
+    if status == "ok":
+        console.print(
+            f"[green]Updated.[/green] {summary['profiles']} profile(s) merged into the local cache."
+        )
+    elif status == "not_modified":
+        console.print(
+            f"[dim]No changes upstream ({summary.get('profiles', '?')} profiles cached locally).[/dim]"
+        )
+    elif status == "http_error":
+        console.print(f"[red]HTTP {summary['http_status']}[/red] — keeping the previous cache.")
+        raise typer.Exit(1)
+    elif status == "parse_error":
+        console.print(f"[red]Upstream YAML is invalid:[/red] {summary.get('error')}")
+        raise typer.Exit(2)
+    elif status == "error":
+        console.print(f"[red]Network error:[/red] {summary.get('error')}")
+        raise typer.Exit(1)
+    else:
+        console.print(f"[yellow]Unknown status: {status}[/yellow]")
+        raise typer.Exit(1)
+
+
+# --- plugins sub-app --------------------------------------------------------
+
+
+@plugins_app.command("list")
+def plugins_list():
+    """Show all installed third-party plugins discovered via entry_points."""
+    from .plugins import list_adapter_plugins, list_profile_plugins, list_router_plugins
+
+    adapters = list_adapter_plugins()
+    routers = list_router_plugins()
+    profiles = list_profile_plugins()
+
+    if not any((adapters, routers, profiles)):
+        console.print(
+            "[dim]No third-party plugins installed yet. See "
+            "docs/plugins.md for how to write one, or browse "
+            "PyPI for 'farol-adapter-*', 'farol-router-*', or "
+            "'farol-profiles-*' packages.[/dim]"
+        )
+        return
+
+    def _block(title: str, items: list[str]):
+        if not items:
+            return
+        console.print(f"[bold]{title}[/bold]")
+        for it in items:
+            console.print(f"  • {it}")
+        console.print()
+
+    _block("Adapters (farol.adapters)", adapters)
+    _block("Routers (farol.routers)", routers)
+    _block("Profile registries (farol.profiles)", profiles)
 
 
 if __name__ == "__main__":

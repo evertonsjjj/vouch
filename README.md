@@ -53,12 +53,15 @@ for r in results.chunks:
 
 - **CSS selector pinning** — the AI now examines DOM context and emits reusable `{container, title, url, snippet, date, author}` selectors. Cached in SQLite; subsequent calls replay via `lxml.cssselect` — no LLM, milliseconds.
 - **Auto-escalation chain** — `http → browser → stealth`. The engine learns the cheapest tier each site needs and persists it.
+- **Browser pool** — one shared Chromium across all searches in a session. Eliminates the per-call launch overhead and the Windows-on-fresh-fork instability.
+- **Plugin model** — `pip install farol-adapter-arxiv` (or anything matching `farol-adapter-*`, `farol-router-*`, `farol-profiles-*`) and the next `SearchEngine` picks it up automatically via Python entry_points. See [`docs/plugins.md`](docs/plugins.md).
+- **Profile registry + auto-update** — 24 curated profiles ship in the box (arxiv, github, huggingface, gov.uk, irs.gov, sede.agenciatributaria, jusbrasil, MDN, pypi, …). `farol profiles update` pulls the latest community registry.
 - **Auto-DNS resolution** — fixes wrong-host catalog entries automatically (`agenciatributaria.es` → `sede.agenciatributaria.gob.es`).
-- **Profile registry** — 24 curated profiles ship in the box (arxiv, github, huggingface, gov.uk, irs.gov, sede.agenciatributaria, jusbrasil, MDN, pypi, ...).
 - **Async API** — `await engine.asearch(query, ...)` alongside the sync API.
 - **Result formatting** — `result.to_markdown()`, `to_json()`.
 - **Smarter quality detector** — flags megamenu shells, recursive search-page links, no-results sentinels in PT/ES/EN.
 - **Probe crawl on `add()`** — opt-in: site profile is learned the moment you add it, not on the first user query.
+- **Package renamed from `curio` to `farol`** (the `curio` name on PyPI is taken by David Beazley's async library since 2016).
 
 See [CHANGELOG.md](CHANGELOG.md) for the full list.
 

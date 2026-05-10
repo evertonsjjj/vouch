@@ -23,15 +23,40 @@ class ProfileRegistry:
 
     @classmethod
     def builtin(cls) -> ProfileRegistry:
-        if not _BUILTIN_PATH.exists():
-            return cls()
+        """Load the bundled YAML + merge any installed plugin profile registries."""
+        if _BUILTIN_PATH.exists():
+            try:
+                data = yaml.safe_load(_BUILTIN_PATH.read_text(encoding="utf-8")) or {}
+                profiles = {p["url"]: p for p in (data.get("profiles") or []) if "url" in p}
+            except Exception as e:
+                log.warning("Could not read builtin profiles: %s", e)
+                profiles = {}
+        else:
+            profiles = {}
+
+        reg = cls(profiles)
+
+        # Merge profile plugins installed via pip (entry_point: farol.profiles).
         try:
-            data = yaml.safe_load(_BUILTIN_PATH.read_text(encoding="utf-8")) or {}
+            from ..plugins import load_profile_plugins
+
+            for plugin_reg in load_profile_plugins():
+                if isinstance(plugin_reg, ProfileRegistry):
+                    reg.merge(plugin_reg)
         except Exception as e:
-            log.warning("Could not read builtin profiles: %s", e)
-            return cls()
-        profiles = {p["url"]: p for p in (data.get("profiles") or []) if "url" in p}
-        return cls(profiles)
+            log.debug("plugin profile load failed: %s", e)
+
+        # Merge the community registry cached by ``farol profiles update``.
+        try:
+            from .update import load_user_registry
+
+            remote = load_user_registry()
+            if remote is not None:
+                reg.merge(remote)
+        except Exception as e:
+            log.debug("user registry load failed: %s", e)
+
+        return reg
 
     @classmethod
     def from_yaml(cls, path: str | Path) -> ProfileRegistry:

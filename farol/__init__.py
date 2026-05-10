@@ -18,8 +18,9 @@ from .exceptions import (
     AdapterError,
     BlockedError,
     CatalogError,
-    CurioError,
+    CurioError,  # back-compat alias (deprecated, will be removed in v1.0)
     DiscoveryError,
+    FarolError,
     RouterError,
 )
 from .models import Chunk, RouteDecision, SearchResult
@@ -35,6 +36,7 @@ __all__ = [
     "Chunk",
     "CurioError",
     "DiscoveryError",
+    "FarolError",
     "ProfileRegistry",
     "RouteDecision",
     "RouterError",

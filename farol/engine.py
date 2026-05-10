@@ -65,6 +65,7 @@ class SearchEngine:
         auto_escalate_adapter: bool = True,
         auto_probe_on_add: bool = False,
         probe_queries: int = 1,
+        use_browser_pool: bool = True,
         # Misc
         verbose: bool = False,
         request_timeout: float = 30.0,
@@ -97,6 +98,7 @@ class SearchEngine:
             auto_escalate_adapter=auto_escalate_adapter,
             auto_probe_on_add=auto_probe_on_add,
             probe_queries=probe_queries,
+            use_browser_pool=use_browser_pool,
             verbose=verbose,
             request_timeout=request_timeout,
         )
@@ -125,6 +127,61 @@ class SearchEngine:
             if router_strategy == "llm":
                 kwargs["llm"] = self._router_llm
             self.router = build_router(router_strategy, **kwargs)
+
+        # Browser pool — lazy. Created on first browser-tier search.
+        self._browser_pool: Any = None
+        self._stealth_pool: Any = None
+
+    # ------------------------------------------------------------------
+    # Browser pool lifecycle
+    # ------------------------------------------------------------------
+
+    def _get_browser_pool(self, *, stealth: bool = False):
+        """Return the engine's shared :class:`BrowserPool`, creating it lazily.
+
+        Two pools may exist (regular + stealth) since they need different
+        Playwright launchers. They share the engine's lifetime and are torn
+        down by :meth:`close`.
+        """
+        if not self.config.use_browser_pool:
+            return None
+        try:
+            from .adapters.browser_pool import BrowserPool
+        except ImportError:
+            return None  # playwright not installed
+
+        if stealth:
+            if self._stealth_pool is None:
+                self._stealth_pool = BrowserPool(
+                    headless=self.config.headless,
+                    user_agent=self.config.user_agent,
+                    stealth=True,
+                )
+            return self._stealth_pool
+        if self._browser_pool is None:
+            self._browser_pool = BrowserPool(
+                headless=self.config.headless,
+                user_agent=self.config.user_agent,
+                stealth=False,
+            )
+        return self._browser_pool
+
+    def close(self) -> None:
+        """Tear down browser pools. Safe to call multiple times."""
+        for pool in (self._browser_pool, self._stealth_pool):
+            if pool is not None:
+                try:
+                    pool.shutdown()
+                except Exception as e:
+                    log.debug("pool shutdown raised: %s", e)
+        self._browser_pool = None
+        self._stealth_pool = None
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        self.close()
 
     # ------------------------------------------------------------------
     # Catalog convenience
@@ -511,7 +568,14 @@ class SearchEngine:
         """Build the adapter for an explicit tier, or default selection if tier is None."""
         if tier is None:
             return build_adapter(
-                site, self.config, llm=self._llm, selector_cache=self.selector_cache
+                site,
+                self.config,
+                llm=self._llm,
+                selector_cache=self.selector_cache,
+                pool=self._get_browser_pool(stealth=False),
+                stealth_pool=self._get_browser_pool(stealth=True)
+                if site.behavior == "stealth"
+                else None,
             )
         if tier == "http":
             from .adapters.http import HTTPAdapter
@@ -524,7 +588,10 @@ class SearchEngine:
                 from .adapters.browser import BrowserAdapter
 
                 return BrowserAdapter(
-                    config=self.config, llm=self._llm, selector_cache=self.selector_cache
+                    config=self.config,
+                    llm=self._llm,
+                    selector_cache=self.selector_cache,
+                    pool=self._get_browser_pool(stealth=False),
                 )
             except ImportError:
                 from .adapters.http import HTTPAdapter
@@ -537,14 +604,20 @@ class SearchEngine:
                 from .adapters.stealth import StealthBrowserAdapter
 
                 return StealthBrowserAdapter(
-                    config=self.config, llm=self._llm, selector_cache=self.selector_cache
+                    config=self.config,
+                    llm=self._llm,
+                    selector_cache=self.selector_cache,
+                    pool=self._get_browser_pool(stealth=True),
                 )
             except ImportError:
                 try:
                     from .adapters.browser import BrowserAdapter
 
                     return BrowserAdapter(
-                        config=self.config, llm=self._llm, selector_cache=self.selector_cache
+                        config=self.config,
+                        llm=self._llm,
+                        selector_cache=self.selector_cache,
+                        pool=self._get_browser_pool(stealth=False),
                     )
                 except ImportError:
                     from .adapters.http import HTTPAdapter
