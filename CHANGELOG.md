@@ -41,6 +41,12 @@ this project follows [Semantic Versioning](https://semver.org/).
   it on top of the bundled ``builtin.yaml``. Honors HTTP caching
   (ETag / If-Modified-Since) and falls back gracefully to the bundled
   profiles on any network failure.
+- **Tesseract OCR fallback** for text CAPTCHAs (``farol[ocr]``). Classical
+  CPU OCR — ~50-200 ms per image, $0, no GPU, no model download. The
+  ``CaptchaSolver`` now chains automatically: Tesseract first → vision LLM
+  on low confidence → return best result. Image-grid CAPTCHAs still need a
+  vision LLM (``ollama/qwen2.5vl:7b`` recommended). ``CaptchaResult`` gains
+  a ``solver`` field showing which backend produced the answer.
 
 ### Added
 

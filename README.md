@@ -580,18 +580,35 @@ engine.add(Site("portal-protegido.com", behavior="stealth"))
 engine = SearchEngine(default_behavior="stealth")
 ```
 
-### Vision LLM CAPTCHA assist
+### CAPTCHA assist (lightweight by default)
 
-Optional, opt-in. When the engine encounters a *visual* CAPTCHA (image grid, text OCR), it can attempt to solve using your configured vision LLM.
+Optional, opt-in, multi-backend. Two tiers used in order from cheapest to heaviest:
+
+**1. Tesseract OCR** — for distorted-text CAPTCHAs (Receita, CVM, Jusbrasil, agencia tributaria, gov.uk).
+CPU-only, ~50-200 ms per image, $0, no GPU, no model download.
+
+```bash
+pip install "farol[ocr]"
+# plus the system binary:
+#   Ubuntu/Debian: sudo apt install tesseract-ocr tesseract-ocr-por tesseract-ocr-spa
+#   macOS:         brew install tesseract tesseract-lang
+#   Windows:       https://github.com/UB-Mannheim/tesseract/wiki
+```
+
+That's already enough for the common text-CAPTCHA case — no `vision_llm` needed.
+
+**2. Vision LLM** — upgrade for image-grid CAPTCHAs ("select all traffic lights").
 
 ```python
 engine = SearchEngine(
     llm="ollama/qwen2.5:14b",
-    vision_llm="ollama/qwen2.5-vl:7b",   # enables CAPTCHA assist
+    vision_llm="ollama/qwen2.5vl:7b",   # ~5 GB, enables image-grid solving
     captcha_min_confidence=0.7,
     captcha_max_attempts=2,
 )
 ```
+
+The `CaptchaSolver` chains them automatically: Tesseract first → vision LLM on low confidence → return best. `result.solver` tells you which one produced the answer.
 
 Supported types: text OCR, reCAPTCHA v2 image grid, hCaptcha image grid (~50–80% success rate).
 **Not supported:** reCAPTCHA v3 (invisible), Cloudflare Turnstile, Arkose 3D puzzles. These return `status="blocked"`.
