@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "C:\Users\EVERT\OneDrive\Documentos\CURIO\examples\test_smoke_v2.py", line 77, in <module>
+    main()
+  File "C:\Users\EVERT\OneDrive\Documentos\CURIO\examples\test_smoke_v2.py", line 46, in main
+    print(f"Catalog: {[s.url for s in engine.list()]}")
+ValueError: I/O operation on closed file.

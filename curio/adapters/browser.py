@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import os
+import threading
 from contextlib import asynccontextmanager
 from typing import Any
 
@@ -22,11 +24,20 @@ try:
         Browser,
         Page,
         Playwright,
-        TimeoutError as PWTimeout,
         async_playwright,
+    )
+    from playwright.async_api import (
+        TimeoutError as PWTimeout,
     )
 except ImportError:  # pragma: no cover
     _PLAYWRIGHT_AVAILABLE = False
+
+
+# Process-wide cap on simultaneous Chromium launches.
+# Each launch is ~250 MB resident; capping prevents the OS from killing the
+# parent on memory pressure (especially on Windows in CI / dev sandboxes).
+_MAX_PARALLEL_BROWSERS = int(os.environ.get("CURIO_MAX_BROWSERS", "1"))
+_LAUNCH_LOCK = threading.Semaphore(_MAX_PARALLEL_BROWSERS)
 
 
 class BrowserAdapter(SiteAdapter):
@@ -53,7 +64,9 @@ class BrowserAdapter(SiteAdapter):
 
     # Sync facade -- runs the async pipeline on a private loop.
     def search(self, ctx: AdapterContext) -> list[Chunk]:
-        return _run_sync(self._search_async(ctx))
+        # Gate launches so we never exceed the global concurrency budget.
+        with _LAUNCH_LOCK:
+            return _run_sync(self._search_async(ctx))
 
     def close(self) -> None:
         pass  # Each search uses a fresh playwright lifecycle.
@@ -61,7 +74,7 @@ class BrowserAdapter(SiteAdapter):
     # --- async pipeline -------------------------------------------------
 
     async def _search_async(self, ctx: AdapterContext) -> list[Chunk]:
-        async with self._browser() as (pw, browser):
+        async with self._browser() as (_pw, browser):
             page = await self._new_page(browser)
             try:
                 return await self._do_search(page, ctx)
@@ -71,24 +84,42 @@ class BrowserAdapter(SiteAdapter):
     @asynccontextmanager
     async def _browser(self):
         pw: Playwright = await async_playwright().start()
-        browser = await self._launch(pw)
+        browser = None
         try:
+            browser = await self._launch(pw)
             yield pw, browser
         finally:
-            await browser.close()
-            await pw.stop()
+            # Each cleanup is independent — a failure in one shouldn't prevent
+            # the others. Otherwise a half-killed Chromium becomes a zombie.
+            if browser is not None:
+                try:
+                    await browser.close()
+                except Exception as e:
+                    log.debug("browser.close() raised: %s", e)
+            try:
+                await pw.stop()
+            except Exception as e:
+                log.debug("pw.stop() raised: %s", e)
 
     async def _launch(self, pw):
-        return await pw.chromium.launch(headless=self.config.headless)
+        # Headless launch with extra-stable flags for low-memory hosts.
+        return await pw.chromium.launch(
+            headless=self.config.headless,
+            args=[
+                "--disable-dev-shm-usage",  # use /tmp instead of shared mem
+                "--no-sandbox",
+                "--disable-blink-features=AutomationControlled",
+            ],
+        )
 
-    async def _new_page(self, browser: "Browser") -> "Page":
+    async def _new_page(self, browser: Browser) -> Page:
         ctx = await browser.new_context(
             user_agent=self.config.user_agent,
             viewport={"width": 1366, "height": 900},
         )
         return await ctx.new_page()
 
-    async def _do_search(self, page: "Page", ctx: AdapterContext) -> list[Chunk]:
+    async def _do_search(self, page: Page, ctx: AdapterContext) -> list[Chunk]:
         site = ctx.site
         await _safe_goto(page, site.homepage, timeout_ms=int(ctx.timeout * 1000))
         if await _is_blocked(page):
@@ -105,7 +136,7 @@ class BrowserAdapter(SiteAdapter):
             return await self._template_path(page, ctx)
         return await self._discovery_path(page, ctx)
 
-    async def _template_path(self, page: "Page", ctx: AdapterContext) -> list[Chunk]:
+    async def _template_path(self, page: Page, ctx: AdapterContext) -> list[Chunk]:
         from urllib.parse import quote_plus, urljoin
 
         url = ctx.site.search_url_template.format(query=quote_plus(ctx.query))
@@ -115,12 +146,14 @@ class BrowserAdapter(SiteAdapter):
         # Many sites render results via XHR after DOMContentLoaded; wait for the
         # network to go idle (capped) so we capture the post-hydration HTML.
         try:
-            await page.wait_for_load_state("networkidle", timeout=min(8000, int(ctx.timeout * 1000)))
+            await page.wait_for_load_state(
+                "networkidle", timeout=min(8000, int(ctx.timeout * 1000))
+            )
         except PWTimeout:
             pass
         return await _scrape_results(page, ctx, llm=self.llm, cache=self.cache)
 
-    async def _discovery_path(self, page: "Page", ctx: AdapterContext) -> list[Chunk]:
+    async def _discovery_path(self, page: Page, ctx: AdapterContext) -> list[Chunk]:
         site = ctx.site
         cached = self.cache.get(site.url) if self.cache else None
         selectors = cached
@@ -143,18 +176,18 @@ class BrowserAdapter(SiteAdapter):
         await self._execute(page, selectors, ctx)
         return await _scrape_results(page, ctx, llm=self.llm, cache=self.cache)
 
-    async def _discover_selectors(self, page: "Page", site, query: str) -> dict | None:
+    async def _discover_selectors(self, page: Page, site, query: str) -> dict | None:
         if self.llm is None:
             return None
         from ..discovery.search_bar import discover_selectors
 
         try:
             return await discover_selectors(page, query, llm=self.llm, site=site)
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             log.warning("Search-bar discovery failed for %s: %s", site.url, e)
             return None
 
-    async def _execute(self, page: "Page", selectors: dict, ctx: AdapterContext) -> None:
+    async def _execute(self, page: Page, selectors: dict, ctx: AdapterContext) -> None:
         from ..discovery.humanize import type_humanlike
 
         input_sel = selectors.get("input")
@@ -180,21 +213,27 @@ class BrowserAdapter(SiteAdapter):
 # --- shared helpers ---------------------------------------------------------
 
 
-async def _safe_goto(page: "Page", url: str, *, timeout_ms: int) -> None:
+async def _safe_goto(page: Page, url: str, *, timeout_ms: int) -> None:
     try:
         await page.goto(url, wait_until="domcontentloaded", timeout=timeout_ms)
     except PWTimeout as e:
         raise AdapterError(f"goto({url}) timed out: {e}") from e
 
 
-async def _is_blocked(page: "Page") -> bool:
+async def _is_blocked(page: Page) -> bool:
     title = (await page.title() or "").lower()
     body = (await page.content())[:2000].lower()
-    needles = ["just a moment", "checking your browser", "captcha", "access denied", "are you human"]
+    needles = [
+        "just a moment",
+        "checking your browser",
+        "captcha",
+        "access denied",
+        "are you human",
+    ]
     return any(n in title or n in body for n in needles)
 
 
-async def _scrape_results(page: "Page", ctx: AdapterContext, *, llm=None, cache=None) -> list[Chunk]:
+async def _scrape_results(page: Page, ctx: AdapterContext, *, llm=None, cache=None) -> list[Chunk]:
     from ..extraction.trafilatura import to_chunks
 
     html = await page.content()
@@ -211,7 +250,7 @@ async def _scrape_results(page: "Page", ctx: AdapterContext, *, llm=None, cache=
     return chunks[: ctx.max_results]
 
 
-async def _extract_full(page: "Page", chunks: list[Chunk]) -> list[Chunk]:
+async def _extract_full(page: Page, chunks: list[Chunk]) -> list[Chunk]:
     out: list[Chunk] = []
     for c in chunks:
         try:
@@ -220,7 +259,7 @@ async def _extract_full(page: "Page", chunks: list[Chunk]) -> list[Chunk]:
             full = trafilatura.extract(html, include_links=False) or ""
             if full:
                 c = c.model_copy(update={"content": full})
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             log.debug("full-fetch in browser failed for %s: %s", c.source_url, e)
         out.append(c)
     return out

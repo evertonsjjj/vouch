@@ -23,24 +23,28 @@ from .exceptions import (
     RouterError,
 )
 from .models import Chunk, RouteDecision, SearchResult
+from .profiles import ProfileRegistry, get_profile, list_profiles
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
-    "Catalog",
-    "Chunk",
-    "CurioError",
     "AdapterError",
     "BlockedError",
+    "Catalog",
     "CatalogError",
+    "Chunk",
+    "CurioError",
     "DiscoveryError",
-    "RouterError",
+    "ProfileRegistry",
     "RouteDecision",
+    "RouterError",
     "SearchEngine",
     "SearchResult",
     "Site",
-    "search",
     "__version__",
+    "get_profile",
+    "list_profiles",
+    "search",
 ]
 
 

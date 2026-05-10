@@ -28,7 +28,7 @@ class EmbeddingRouter(Router):
         self.model_name = model_name
         self.threshold = threshold
         self._model: Any = None
-        self._cache: dict[str, "Any"] = {}  # url -> embedding
+        self._cache: dict[str, Any] = {}  # url -> embedding
 
     def _ensure_model(self):
         if self._model is not None:
@@ -62,7 +62,10 @@ class EmbeddingRouter(Router):
             self._ensure_model()
         except RouterError as e:
             log.warning("%s — falling back to all sites", e)
-            return [RouteDecision(site=s.url, score=0.5, reason="no-embed-model") for s in sites[: ctx.top_k]]
+            return [
+                RouteDecision(site=s.url, score=0.5, reason="no-embed-model")
+                for s in sites[: ctx.top_k]
+            ]
 
         import numpy as np  # type: ignore
 

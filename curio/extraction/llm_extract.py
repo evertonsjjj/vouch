@@ -49,7 +49,9 @@ def _strip(s: str) -> str:
 # ----------------------------------------------------------------------
 
 
-def looks_low_quality(chunks: list[Chunk], *, source_url: str | None = None, html: str | None = None) -> bool:
+def looks_low_quality(
+    chunks: list[Chunk], *, source_url: str | None = None, html: str | None = None
+) -> bool:
     """True when extracted chunks are sparse, short, or nav-like.
 
     Detects four classes of bad-quality output:
@@ -88,8 +90,18 @@ def looks_low_quality(chunks: list[Chunk], *, source_url: str | None = None, htm
 
         common, count = Counter(prefixes).most_common(1)[0]
         if count / n >= 0.8 and common in {
-            "topics", "topic", "category", "categories", "section", "sections",
-            "resources", "resource", "tag", "tags", "browse", "explore",
+            "topics",
+            "topic",
+            "category",
+            "categories",
+            "section",
+            "sections",
+            "resources",
+            "resource",
+            "tag",
+            "tags",
+            "browse",
+            "explore",
         }:
             return True
 
@@ -114,9 +126,7 @@ def looks_low_quality(chunks: list[Chunk], *, source_url: str | None = None, htm
                 return True
 
     # Generic 1-3 word categorical titles (e.g. "Benefits", "History & Society").
-    short_categorical = sum(
-        1 for c in chunks if len(c.title.split()) <= 3 and c.title.istitle()
-    )
+    short_categorical = sum(1 for c in chunks if len(c.title.split()) <= 3 and c.title.istitle())
     if (short_categorical / n) > 0.6:
         return True
 
@@ -128,7 +138,7 @@ def looks_low_quality(chunks: list[Chunk], *, source_url: str | None = None, htm
 # ----------------------------------------------------------------------
 
 
-def harvest_candidates(html: str, *, source_url: str, site: "Site", cap: int = 120) -> list[dict]:
+def harvest_candidates(html: str, *, source_url: str, site: Site, cap: int = 120) -> list[dict]:
     """Pull every plausible <a href=...>text</a> from html, with DOM context.
 
     For each candidate, also captures:
@@ -170,7 +180,7 @@ def harvest_candidates(html: str, *, source_url: str, site: "Site", cap: int = 1
                 "dom_path": _dom_path(a),
                 "siblings": _sibling_tags(a),
             }
-    except Exception:  # noqa: BLE001
+    except Exception:
         for m in _HREF.finditer(html):
             href = m.group("href")
             body = _strip(m.group("body"))
@@ -275,9 +285,9 @@ def llm_pick_results(
     candidates: list[dict],
     *,
     query: str,
-    site: "Site",
+    site: Site,
     page_url: str,
-    llm: "LLMClient",
+    llm: LLMClient,
     max_keep: int = 10,
 ) -> tuple[list[int], str]:
     """Ask the LLM which candidates are real results. Returns (indices, learned_pattern)."""
@@ -300,7 +310,7 @@ def llm_pick_results(
             temperature=0.0,
             max_tokens=600,
         )
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         log.warning("LLM result-extraction failed for %s: %s", site.url, e)
         return [], ""
     raw = data.get("results") if isinstance(data, dict) else []
@@ -379,10 +389,10 @@ def extract_with_llm_fallback(
     html: str,
     *,
     source_url: str,
-    site: "Site",
+    site: Site,
     query: str,
-    llm: "LLMClient",
-    cache: "SelectorCache | None" = None,
+    llm: LLMClient,
+    cache: SelectorCache | None = None,
     max_results: int = 10,
 ) -> list[Chunk]:
     """Multi-tier fallback for pages the static heuristic can't parse.
@@ -398,7 +408,9 @@ def extract_with_llm_fallback(
     # 1) CSS selector cache — best replay path.
     cached_css = css.get_cached(cache, site.url)
     if cached_css:
-        chunks = css.apply_selectors(html, cached_css, source_url=source_url, site=site, max_results=max_results)
+        chunks = css.apply_selectors(
+            html, cached_css, source_url=source_url, site=site, max_results=max_results
+        )
         if chunks:
             log.info("CSS selector cache hit for %s (%d chunks)", site.url, len(chunks))
             return chunks
@@ -428,15 +440,17 @@ def extract_with_llm_fallback(
     if cache is not None and any(c.get("dom_path") for c in picked):
         try:
             selectors = css.discover_selectors(
-                picked, query=query, site=site, page_url=source_url, llm=llm
+                picked, query=query, site=site, page_url=source_url, llm=llm, html=html
             )
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             log.warning("css.discover_selectors raised for %s: %s", site.url, e)
             selectors = None
         if selectors and css.selectors_validate(html, selectors, source_url=source_url, site=site):
             css.store(cache, site.url, selectors)
             log.info("Cached CSS selectors for %s: %s", site.url, selectors)
-            chunks = css.apply_selectors(html, selectors, source_url=source_url, site=site, max_results=max_results)
+            chunks = css.apply_selectors(
+                html, selectors, source_url=source_url, site=site, max_results=max_results
+            )
             if chunks:
                 return chunks
 
@@ -446,7 +460,7 @@ def extract_with_llm_fallback(
     return _to_chunks(picked, site=site, source="llm-pick")
 
 
-def _to_chunks(picked: list[dict], *, site: "Site", source: str) -> list[Chunk]:
+def _to_chunks(picked: list[dict], *, site: Site, source: str) -> list[Chunk]:
     return [
         Chunk(
             source_url=c["url"],
@@ -465,25 +479,25 @@ def _to_chunks(picked: list[dict], *, site: "Site", source: str) -> list[Chunk]:
 # ----------------------------------------------------------------------
 
 
-def _read_cached_pattern(cache: "SelectorCache | None", domain: str) -> str:
+def _read_cached_pattern(cache: SelectorCache | None, domain: str) -> str:
     if not cache:
         return ""
     try:
         existing = cache.get(domain) or {}
-    except Exception:  # noqa: BLE001
+    except Exception:
         return ""
     return str(existing.get("result_url_contains") or "")
 
 
-def _store_pattern(cache: "SelectorCache", domain: str, pattern: str) -> None:
+def _store_pattern(cache: SelectorCache, domain: str, pattern: str) -> None:
     try:
         existing = cache.get(domain) or {}
-    except Exception:  # noqa: BLE001
+    except Exception:
         existing = {}
     existing["result_url_contains"] = pattern
     try:
         cache.set(domain, existing)
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         log.warning("Could not persist learned pattern for %s: %s", domain, e)
 
 

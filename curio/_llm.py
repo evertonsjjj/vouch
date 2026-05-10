@@ -108,7 +108,7 @@ class LLMClient:
                 self.tokens = self.tokens.add(usage)
                 self.cost_usd += estimate_cost(model, usage.input, usage.output)
                 return txt
-            except Exception as e:  # noqa: BLE001
+            except Exception as e:
                 log.warning("LLM call to %s failed: %s", model, e)
                 last_err = e
         raise LLMError(f"All LLM models failed. Last error: {last_err}")
@@ -151,7 +151,7 @@ def _extract(resp) -> tuple[str, TokenUsage]:
     try:
         msg = resp.choices[0].message
         text = msg.content or ""
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         raise LLMError(f"Could not extract message from LLM response: {e}") from e
     usage = getattr(resp, "usage", None) or {}
     pin = getattr(usage, "prompt_tokens", None) or usage.get("prompt_tokens", 0) if usage else 0

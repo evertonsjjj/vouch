@@ -41,5 +41,8 @@ class TagRouter(Router):
             )
         scored.sort(key=lambda d: d.score, reverse=True)
         if not scored and self.fall_back_to_all:
-            return [RouteDecision(site=s.url, score=0.5, reason="tag-fallback") for s in sites[: ctx.top_k]]
+            return [
+                RouteDecision(site=s.url, score=0.5, reason="tag-fallback")
+                for s in sites[: ctx.top_k]
+            ]
         return scored[: ctx.top_k]

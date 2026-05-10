@@ -1,0 +1,326 @@
+Running 90 queries against 10 sites...
+
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=imposto+de+renda+pessoa+f%C3%ADsica+2026+declara%C3%A7%C3%A3o failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=imposto+de+renda+pessoa+f%C3%ADsica+2026+declara%C3%A7%C3%A3o'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=imposto+de+renda+pessoa+f%C3%ADsica+2026+declara%C3%A7%C3%A3o failed: [Errno 11001] getaddrinfo failed
+[ 1] PT-TAX ✗ 17.8s chunks=0 | route=jusbrasil.com.br, agenciatributaria.es | first: —
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=tabela+ISS+S%C3%A3o+Paulo+servi%C3%A7os+al%C3%ADquota failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=tabela+ISS+S%C3%A3o+Paulo+servi%C3%A7os+al%C3%ADquota'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[ 2] PT-TAX ~  9.0s chunks=3 | route=jusbrasil.com.br, gov.uk | first: Benefits
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=ICMS+tributa%C3%A7%C3%A3o+interestadual+diferencial failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=ICMS+tributa%C3%A7%C3%A3o+interestadual+diferencial'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=ICMS+tributa%C3%A7%C3%A3o+interestadual+diferencial failed: [Errno 11001] getaddrinfo failed
+[ 3] PT-TAX ✗ 10.5s chunks=0 | route=jusbrasil.com.br, agenciatributaria.es | first: —
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=MEI+faturamento+limite+anual+2026 failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=MEI+faturamento+limite+anual+2026'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[ 4] PT-TAX ~ 11.8s chunks=3 | route=jusbrasil.com.br, gov.uk | first: Benefits
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=Simples+Nacional+anexo+III+al%C3%ADquota failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=Simples+Nacional+anexo+III+al%C3%ADquota'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=Simples+Nacional+anexo+III+al%C3%ADquota failed: [Errno 11001] getaddrinfo failed
+[ 5] PT-TAX ✗ 12.2s chunks=0 | route=jusbrasil.com.br, agenciatributaria.es | first: —
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=PIS+COFINS+regime+cumulativo+n%C3%A3o+cumulativo failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=PIS+COFINS+regime+cumulativo+n%C3%A3o+cumulativo'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=PIS+COFINS+regime+cumulativo+n%C3%A3o+cumulativo failed: [Errno 11001] getaddrinfo failed
+[ 6] PT-TAX ✗ 12.1s chunks=0 | route=jusbrasil.com.br, agenciatributaria.es | first: —
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=Lucro+Real+apura%C3%A7%C3%A3o+trimestral+pessoa+jur%C3%ADdica failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=Lucro+Real+apura%C3%A7%C3%A3o+trimestral+pessoa+jur%C3%ADdica'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[ 7] PT-TAX ~ 12.6s chunks=3 | route=jusbrasil.com.br, gov.uk | first: Benefits
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=IPTU+isen%C3%A7%C3%A3o+idoso+aposentado failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=IPTU+isen%C3%A7%C3%A3o+idoso+aposentado'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[ 8] PT-TAX ~ 10.9s chunks=3 | route=jusbrasil.com.br, gov.uk | first: Benefits
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=ITBI+valor+venal+munic%C3%ADpio+S%C3%A3o+Paulo failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=ITBI+valor+venal+munic%C3%ADpio+S%C3%A3o+Paulo'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=ITBI+valor+venal+munic%C3%ADpio+S%C3%A3o+Paulo failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=ITBI+valor+venal+munic%C3%ADpio+S%C3%A3o+Paulo'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+[ 9] PT-TAX ✗ 10.6s chunks=0 | route=folha.uol.com.br, jusbrasil.com.br | first: —
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=IPVA+tabela+FIPE+valor+venal failed: [Errno 11001] getaddrinfo failed
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=IPVA+tabela+FIPE+valor+venal failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=IPVA+tabela+FIPE+valor+venal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[10] PT-TAX ✗ 10.6s chunks=0 | route=jusbrasil.com.br, agenciatributaria.es | first: —
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=ISS+reten%C3%A7%C3%A3o+fonte+tomador+servi%C3%A7o failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=ISS+reten%C3%A7%C3%A3o+fonte+tomador+servi%C3%A7o'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[11] PT-TAX ~ 10.6s chunks=3 | route=britannica.com, jusbrasil.com.br | first: History & Society
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=DARF+c%C3%B3digo+pagamento+receita+federal failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=DARF+c%C3%B3digo+pagamento+receita+federal'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[12] PT-TAX ~  9.4s chunks=3 | route=jusbrasil.com.br, gov.uk | first: Benefits
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=Reforma+Tribut%C3%A1ria+IBS+CBS+implementa%C3%A7%C3%A3o failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=Reforma+Tribut%C3%A1ria+IBS+CBS+implementa%C3%A7%C3%A3o'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=Reforma+Tribut%C3%A1ria+IBS+CBS+implementa%C3%A7%C3%A3o failed: [Errno 11001] getaddrinfo failed
+[13] PT-TAX ✗  9.5s chunks=0 | route=jusbrasil.com.br, agenciatributaria.es | first: —
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=Receita+Federal+CPF+regulariza%C3%A7%C3%A3o+situa%C3%A7%C3%A3o failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=Receita+Federal+CPF+regulariza%C3%A7%C3%A3o+situa%C3%A7%C3%A3o'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[14] PT-TAX ~ 11.2s chunks=3 | route=jusbrasil.com.br, gov.uk | first: Benefits
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=Lei+Complementar+116+ISS+lista+servi%C3%A7os failed: [Errno 11001] getaddrinfo failed
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=Lei+Complementar+116+ISS+lista+servi%C3%A7os failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=Lei+Complementar+116+ISS+lista+servi%C3%A7os'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[15] PT-TAX ✗ 10.4s chunks=0 | route=jusbrasil.com.br, agenciatributaria.es | first: —
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=IRS+form+1040+individual+income+tax failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=IRS+form+1040+individual+income+tax'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=IRS+form+1040+individual+income+tax failed: [Errno 11001] getaddrinfo failed
+[16] EN-TAX ✗ 11.3s chunks=0 | route=jusbrasil.com.br, agenciatributaria.es | first: —
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=capital+gains+tax+US+2026+long+term failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=capital+gains+tax+US+2026+long+term'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[17] EN-TAX ~ 10.6s chunks=3 | route=jusbrasil.com.br, gov.uk | first: Benefits
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=tax+deduction+self+employed+home+office failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=tax+deduction+self+employed+home+office'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[18] EN-TAX ~  9.2s chunks=3 | route=jusbrasil.com.br, gov.uk | first: Business and self-employed
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=estimated+quarterly+tax+payment+IRS failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=estimated+quarterly+tax+payment+IRS'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[19] EN-TAX ~ 10.9s chunks=3 | route=gov.uk, jusbrasil.com.br | first: Benefits
+[20] EN-TAX ✓ 10.2s chunks=3 | route=gov.uk, britannica.com | first: Benefits
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=FBAR+foreign+bank+account+reporting+requirements failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=FBAR+foreign+bank+account+reporting+requirements'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[21] EN-TAX ~  8.7s chunks=3 | route=gov.uk, jusbrasil.com.br | first: Benefits
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=tax+credit+child+dependent+deduction failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=tax+credit+child+dependent+deduction'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[22] EN-TAX ~  8.4s chunks=3 | route=jusbrasil.com.br, gov.uk | first: Benefits
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=VAT+registration+UK+threshold+HMRC failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=VAT+registration+UK+threshold+HMRC'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[23] EN-TAX ~  8.6s chunks=3 | route=gov.uk, jusbrasil.com.br | first: Benefits
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=Roth+IRA+conversion+tax+implications failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=Roth+IRA+conversion+tax+implications'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[24] EN-TAX ~  9.4s chunks=3 | route=jusbrasil.com.br, gov.uk | first: Benefits
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=1099+tax+form+independent+contractor failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=1099+tax+form+independent+contractor'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[25] EN-TAX ~ 11.2s chunks=3 | route=gov.uk, jusbrasil.com.br | first: Benefits
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=EIN+application+LLC+IRS failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=EIN+application+LLC+IRS'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[26] EN-TAX ~ 10.5s chunks=3 | route=gov.uk, jusbrasil.com.br | first: Benefits
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=tax+loss+harvesting+strategy+ETF failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=tax+loss+harvesting+strategy+ETF'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[27] EN-TAX ~  8.3s chunks=3 | route=gov.uk, jusbrasil.com.br | first: Benefits
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=section+179+deduction+equipment+business failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=section+179+deduction+equipment+business'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[28] EN-TAX ~  9.9s chunks=3 | route=gov.uk, jusbrasil.com.br | first: Business and self-employed
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=alternative+minimum+tax+AMT+calculation failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=alternative+minimum+tax+AMT+calculation'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[29] EN-TAX ~ 10.5s chunks=3 | route=jusbrasil.com.br, gov.uk | first: Benefits
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=stamp+duty+UK+property+tax+2026 failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=stamp+duty+UK+property+tax+2026'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[30] EN-TAX ~  9.3s chunks=3 | route=gov.uk, jusbrasil.com.br | first: Benefits
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=declaraci%C3%B3n+renta+IRPF+2026+Espa%C3%B1a failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=declaraci%C3%B3n+renta+IRPF+2026+Espa%C3%B1a'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=declaraci%C3%B3n+renta+IRPF+2026+Espa%C3%B1a failed: [Errno 11001] getaddrinfo failed
+[31] ES-TAX ✗ 10.9s chunks=0 | route=agenciatributaria.es, jusbrasil.com.br | first: —
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=modelo+303+IVA+trimestral+aut%C3%B3nomo failed: [Errno 11001] getaddrinfo failed
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=modelo+303+IVA+trimestral+aut%C3%B3nomo failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=modelo+303+IVA+trimestral+aut%C3%B3nomo'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[32] ES-TAX ✗ 11.3s chunks=0 | route=agenciatributaria.es, jusbrasil.com.br | first: —
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=aut%C3%B3nomo+cuota+Seguridad+Social+tarifa+plana failed: [Errno 11001] getaddrinfo failed
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=aut%C3%B3nomo+cuota+Seguridad+Social+tarifa+plana failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=aut%C3%B3nomo+cuota+Seguridad+Social+tarifa+plana'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[33] ES-TAX ✗ 11.6s chunks=0 | route=agenciatributaria.es, jusbrasil.com.br | first: —
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=tributaci%C3%B3n+criptomonedas+Espa%C3%B1a+2026 failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=tributaci%C3%B3n+criptomonedas+Espa%C3%B1a+2026'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=tributaci%C3%B3n+criptomonedas+Espa%C3%B1a+2026 failed: [Errno 11001] getaddrinfo failed
+[34] ES-TAX ✗ 11.5s chunks=0 | route=agenciatributaria.es, jusbrasil.com.br | first: —
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=deducci%C3%B3n+vivienda+habitual+hipoteca failed: [Errno 11001] getaddrinfo failed
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=deducci%C3%B3n+vivienda+habitual+hipoteca failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=deducci%C3%B3n+vivienda+habitual+hipoteca'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[35] ES-TAX ✗ 12.2s chunks=0 | route=jusbrasil.com.br, agenciatributaria.es | first: —
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=modelo+720+bienes+extranjero+declaraci%C3%B3n failed: [Errno 11001] getaddrinfo failed
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=modelo+720+bienes+extranjero+declaraci%C3%B3n failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=modelo+720+bienes+extranjero+declaraci%C3%B3n'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[36] ES-TAX ✗ 11.1s chunks=0 | route=agenciatributaria.es, jusbrasil.com.br | first: —
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=Hacienda+devoluci%C3%B3n+renta+plazo+2026 failed: [Errno 11001] getaddrinfo failed
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=Hacienda+devoluci%C3%B3n+renta+plazo+2026 failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=Hacienda+devoluci%C3%B3n+renta+plazo+2026'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[37] ES-TAX ✗  9.6s chunks=0 | route=agenciatributaria.es, jusbrasil.com.br | first: —
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=Impuesto+Sociedades+tipo+general+empresas failed: [Errno 11001] getaddrinfo failed
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=Impuesto+Sociedades+tipo+general+empresas failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=Impuesto+Sociedades+tipo+general+empresas'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[38] ES-TAX ✗ 11.9s chunks=0 | route=jusbrasil.com.br, agenciatributaria.es | first: —
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=IRPF+retenci%C3%B3n+n%C3%B3mina+c%C3%A1lculo failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=IRPF+retenci%C3%B3n+n%C3%B3mina+c%C3%A1lculo'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=IRPF+retenci%C3%B3n+n%C3%B3mina+c%C3%A1lculo failed: [Errno 11001] getaddrinfo failed
+[39] ES-TAX ✗ 11.6s chunks=0 | route=jusbrasil.com.br, agenciatributaria.es | first: —
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=Patrimonio+impuesto+comunidades+aut%C3%B3nomas failed: [Errno 11001] getaddrinfo failed
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=Patrimonio+impuesto+comunidades+aut%C3%B3nomas failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=Patrimonio+impuesto+comunidades+aut%C3%B3nomas'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[40] ES-TAX ✗ 11.6s chunks=0 | route=jusbrasil.com.br, agenciatributaria.es | first: —
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=IVA+reducido+productos+b%C3%A1sicos+alimentos failed: [Errno 11001] getaddrinfo failed
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=IVA+reducido+productos+b%C3%A1sicos+alimentos failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=IVA+reducido+productos+b%C3%A1sicos+alimentos'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[41] ES-TAX ✗  8.4s chunks=0 | route=agenciatributaria.es, jusbrasil.com.br | first: —
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=r%C3%A9gimen+especial+agricultura+IVA+m%C3%B3dulos failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=r%C3%A9gimen+especial+agricultura+IVA+m%C3%B3dulos'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=r%C3%A9gimen+especial+agricultura+IVA+m%C3%B3dulos failed: [Errno 11001] getaddrinfo failed
+[42] ES-TAX ✗ 10.2s chunks=0 | route=jusbrasil.com.br, agenciatributaria.es | first: —
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=Impuesto+Sucesiones+donaciones+auton%C3%B3micas failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=Impuesto+Sucesiones+donaciones+auton%C3%B3micas'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=Impuesto+Sucesiones+donaciones+auton%C3%B3micas failed: [Errno 11001] getaddrinfo failed
+[43] ES-TAX ✗ 11.2s chunks=0 | route=jusbrasil.com.br, agenciatributaria.es | first: —
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=Plusval%C3%ADa+municipal+Tribunal+Constitucional failed: [Errno 11001] getaddrinfo failed
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=Plusval%C3%ADa+municipal+Tribunal+Constitucional failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=Plusval%C3%ADa+municipal+Tribunal+Constitucional'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[44] ES-TAX ✗ 10.0s chunks=0 | route=jusbrasil.com.br, agenciatributaria.es | first: —
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=tributaci%C3%B3n+trabajador+desplazado+extranjero failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=tributaci%C3%B3n+trabajador+desplazado+extranjero'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=tributaci%C3%B3n+trabajador+desplazado+extranjero failed: [Errno 11001] getaddrinfo failed
+[45] ES-TAX ✗  9.3s chunks=0 | route=jusbrasil.com.br, agenciatributaria.es | first: —
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=hist%C3%B3ria+da+Rep%C3%BAblica+Velha+Brasil failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=hist%C3%B3ria+da+Rep%C3%BAblica+Velha+Brasil'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+[46] PT-GEN ~  9.6s chunks=3 | route=britannica.com, folha.uol.com.br | first: History & Society
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=biografia+Machado+de+Assis+escritor failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=biografia+Machado+de+Assis+escritor'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+[47] PT-GEN ~ 11.3s chunks=3 | route=britannica.com, folha.uol.com.br | first: History & Society
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=f%C3%B3rmula+qu%C3%ADmica+%C3%A1gua+oxigenada+uso failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=f%C3%B3rmula+qu%C3%ADmica+%C3%A1gua+oxigenada+uso'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+[48] PT-GEN ~  9.9s chunks=3 | route=britannica.com, folha.uol.com.br | first: History & Society
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=como+fazer+feijoada+tradicional+receita failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=como+fazer+feijoada+tradicional+receita'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+[49] PT-GEN ~ 10.6s chunks=3 | route=folha.uol.com.br, britannica.com | first: History & Society
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=treino+academia+hipertrofia+muscular+iniciante failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=treino+academia+hipertrofia+muscular+iniciante'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+[50] PT-GEN ~  9.0s chunks=3 | route=britannica.com, folha.uol.com.br | first: History & Society
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=diabetes+tipo+2+tratamento+controle failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=diabetes+tipo+2+tratamento+controle'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+[51] PT-GEN ~  8.9s chunks=3 | route=britannica.com, folha.uol.com.br | first: History & Society
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=caf%C3%A9+especial+torra+gr%C3%A3os+brasileiros failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=caf%C3%A9+especial+torra+gr%C3%A3os+brasileiros'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+Site elpais.com failed: GET https://elpais.com/buscador/?q=caf%C3%A9+especial+torra+gr%C3%A3os+brasileiros failed: Client error '403 Forbidden' for url 'https://elpais.com/buscador/?q=caf%C3%A9+especial+torra+gr%C3%A3os+brasileiros'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[52] PT-GEN ✗  9.9s chunks=0 | route=folha.uol.com.br, elpais.com | first: —
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=carros+el%C3%A9tricos+brasileiros+2026+lan%C3%A7amentos failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=carros+el%C3%A9tricos+brasileiros+2026+lan%C3%A7amentos'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+Site elpais.com failed: GET https://elpais.com/buscador/?q=carros+el%C3%A9tricos+brasileiros+2026+lan%C3%A7amentos failed: Client error '403 Forbidden' for url 'https://elpais.com/buscador/?q=carros+el%C3%A9tricos+brasileiros+2026+lan%C3%A7amentos'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[53] PT-GEN ✗ 12.4s chunks=0 | route=folha.uol.com.br, elpais.com | first: —
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=literatura+brasileira+modernismo+M%C3%A1rio+Andrade failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=literatura+brasileira+modernismo+M%C3%A1rio+Andrade'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+[54] PT-GEN ~ 11.3s chunks=3 | route=folha.uol.com.br, britannica.com | first: History & Society
+Site elpais.com failed: GET https://elpais.com/buscador/?q=anatomia+cora%C3%A7%C3%A3o+humano+c%C3%A2maras failed: Client error '403 Forbidden' for url 'https://elpais.com/buscador/?q=anatomia+cora%C3%A7%C3%A3o+humano+c%C3%A2maras'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[55] PT-GEN ~  8.9s chunks=3 | route=britannica.com, elpais.com | first: History & Society
+Site elpais.com failed: GET https://elpais.com/buscador/?q=evolu%C3%A7%C3%A3o+Darwin+sele%C3%A7%C3%A3o+natural+esp%C3%A9cies failed: Client error '403 Forbidden' for url 'https://elpais.com/buscador/?q=evolu%C3%A7%C3%A3o+Darwin+sele%C3%A7%C3%A3o+natural+esp%C3%A9cies'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[56] PT-GEN ~ 11.6s chunks=3 | route=britannica.com, elpais.com | first: History & Society
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=vinhos+chilenos+cabernet+sauvignon+Maipo failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=vinhos+chilenos+cabernet+sauvignon+Maipo'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+[57] PT-GEN ~  9.8s chunks=3 | route=folha.uol.com.br, britannica.com | first: History & Society
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=futebol+brasileiro+Copa+Libertadores+2026 failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=futebol+brasileiro+Copa+Libertadores+2026'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+Site elpais.com failed: GET https://elpais.com/buscador/?q=futebol+brasileiro+Copa+Libertadores+2026 failed: Client error '403 Forbidden' for url 'https://elpais.com/buscador/?q=futebol+brasileiro+Copa+Libertadores+2026'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[58] PT-GEN ✗ 12.8s chunks=0 | route=folha.uol.com.br, elpais.com | first: —
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=m%C3%BAsica+samba+origem+hist%C3%B3ria+Rio failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=m%C3%BAsica+samba+origem+hist%C3%B3ria+Rio'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+[59] PT-GEN ~ 11.2s chunks=3 | route=britannica.com, folha.uol.com.br | first: History & Society
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=energia+solar+pain%C3%A9is+fotovoltaicos+residencial failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=energia+solar+pain%C3%A9is+fotovoltaicos+residencial'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+[60] PT-GEN ~  8.4s chunks=3 | route=folha.uol.com.br, britannica.com | first: History & Society
+Site elpais.com failed: GET https://elpais.com/buscador/?q=history+of+the+Roman+Empire+fall failed: Client error '403 Forbidden' for url 'https://elpais.com/buscador/?q=history+of+the+Roman+Empire+fall'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[61] EN-GEN ~  9.6s chunks=3 | route=britannica.com, elpais.com | first: History & Society
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=Shakespeare+Hamlet+analysis+themes failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=Shakespeare+Hamlet+analysis+themes'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+[62] EN-GEN ~ 11.9s chunks=3 | route=britannica.com, folha.uol.com.br | first: History & Society
+[63] EN-GEN ✓ 10.2s chunks=3 | route=britannica.com, arxiv.org | first: arXiv:2601.12101
+Site elpais.com failed: GET https://elpais.com/buscador/?q=Italian+carbonara+recipe+traditional failed: Client error '403 Forbidden' for url 'https://elpais.com/buscador/?q=Italian+carbonara+recipe+traditional'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[64] EN-GEN ~ 10.2s chunks=3 | route=britannica.com, elpais.com | first: History & Society
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=HIIT+cardio+workout+routine+beginner failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=HIIT+cardio+workout+routine+beginner'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+[65] EN-GEN ~ 10.3s chunks=3 | route=britannica.com, folha.uol.com.br | first: History & Society
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=diabetes+type+2+management+diet failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=diabetes+type+2+management+diet'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+[66] EN-GEN ~  9.1s chunks=3 | route=britannica.com, folha.uol.com.br | first: History & Society
+Site elpais.com failed: GET https://elpais.com/buscador/?q=espresso+coffee+extraction+technique failed: Client error '403 Forbidden' for url 'https://elpais.com/buscador/?q=espresso+coffee+extraction+technique'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[67] EN-GEN ~ 12.1s chunks=3 | route=britannica.com, elpais.com | first: History & Society
+[68] EN-GEN ✓  9.6s chunks=3 | route=arxiv.org, britannica.com | first: arXiv:2604.24724
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=Hemingway+Old+Man+and+the+Sea failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=Hemingway+Old+Man+and+the+Sea'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+[69] EN-GEN ~ 10.0s chunks=3 | route=britannica.com, folha.uol.com.br | first: History & Society
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=human+brain+anatomy+cortex+regions failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=human+brain+anatomy+cortex+regions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[70] EN-GEN ~ 12.5s chunks=3 | route=britannica.com, jusbrasil.com.br | first: History & Society
+Site jusbrasil.com.br failed: GET https://jusbrasil.com.br/busca?q=evolution+natural+selection+Darwin+theory failed: Client error '403 Forbidden' for url 'https://jusbrasil.com.br/busca?q=evolution+natural+selection+Darwin+theory'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[71] EN-GEN ~ 11.7s chunks=3 | route=britannica.com, jusbrasil.com.br | first: History & Society
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=French+wine+Bordeaux+region+grapes failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=French+wine+Bordeaux+region+grapes'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+[72] EN-GEN ~  8.8s chunks=3 | route=britannica.com, folha.uol.com.br | first: History & Society
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=Premier+League+standings+2026+season failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=Premier+League+standings+2026+season'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+Site elpais.com failed: GET https://elpais.com/buscador/?q=Premier+League+standings+2026+season failed: Client error '403 Forbidden' for url 'https://elpais.com/buscador/?q=Premier+League+standings+2026+season'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[73] EN-GEN ✗ 10.4s chunks=0 | route=folha.uol.com.br, elpais.com | first: —
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=jazz+history+Louis+Armstrong+New+Orleans failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=jazz+history+Louis+Armstrong+New+Orleans'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+[74] EN-GEN ~ 12.7s chunks=3 | route=britannica.com, folha.uol.com.br | first: History & Society
+[75] EN-GEN ✓ 10.2s chunks=3 | route=arxiv.org, britannica.com | first: arXiv:2603.07518
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=historia+Espa%C3%B1a+Reconquista+cronolog%C3%ADa failed: [Errno 11001] getaddrinfo failed
+[76] ES-GEN ~  9.2s chunks=3 | route=agenciatributaria.es, britannica.com | first: History & Society
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=Gabriel+Garc%C3%ADa+M%C3%A1rquez+novelas+Cien+A%C3%B1os failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=Gabriel+Garc%C3%ADa+M%C3%A1rquez+novelas+Cien+A%C3%B1os'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+[77] ES-GEN ~ 10.2s chunks=3 | route=britannica.com, folha.uol.com.br | first: History & Society
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=ADN+replicaci%C3%B3n+proceso+biolog%C3%ADa+molecular failed: [Errno 11001] getaddrinfo failed
+[78] ES-GEN ~ 11.4s chunks=3 | route=britannica.com, agenciatributaria.es | first: History & Society
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=paella+valenciana+receta+tradicional failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=paella+valenciana+receta+tradicional'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+[79] ES-GEN ~  9.3s chunks=3 | route=britannica.com, folha.uol.com.br | first: History & Society
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=rutina+entrenamiento+gimnasio+fuerza+principiante failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=rutina+entrenamiento+gimnasio+fuerza+principiante'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+[80] ES-GEN ~ 10.7s chunks=3 | route=britannica.com, folha.uol.com.br | first: History & Society
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=diabetes+tipo+2+tratamiento+dieta failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=diabetes+tipo+2+tratamiento+dieta'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+[81] ES-GEN ~  9.4s chunks=3 | route=britannica.com, folha.uol.com.br | first: History & Society
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=caf%C3%A9+especial+tueste+Colombia+origen failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=caf%C3%A9+especial+tueste+Colombia+origen'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+[82] ES-GEN ~ 12.1s chunks=3 | route=folha.uol.com.br, britannica.com | first: History & Society
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=veh%C3%ADculos+el%C3%A9ctricos+Espa%C3%B1a+2026+modelos failed: [Errno 11001] getaddrinfo failed
+Site elpais.com failed: GET https://elpais.com/buscador/?q=veh%C3%ADculos+el%C3%A9ctricos+Espa%C3%B1a+2026+modelos failed: Client error '403 Forbidden' for url 'https://elpais.com/buscador/?q=veh%C3%ADculos+el%C3%A9ctricos+Espa%C3%B1a+2026+modelos'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[83] ES-GEN ✗ 11.6s chunks=0 | route=agenciatributaria.es, elpais.com | first: —
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=Cervantes+Don+Quijote+an%C3%A1lisis+literario failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=Cervantes+Don+Quijote+an%C3%A1lisis+literario'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+[84] ES-GEN ~ 12.0s chunks=3 | route=britannica.com, folha.uol.com.br | first: History & Society
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=anatom%C3%ADa+cerebro+humano+corteza failed: [Errno 11001] getaddrinfo failed
+[85] ES-GEN ~ 10.8s chunks=3 | route=britannica.com, agenciatributaria.es | first: History & Society
+Site elpais.com failed: GET https://elpais.com/buscador/?q=evoluci%C3%B3n+selecci%C3%B3n+natural+Darwin+teor%C3%ADa failed: Client error '403 Forbidden' for url 'https://elpais.com/buscador/?q=evoluci%C3%B3n+selecci%C3%B3n+natural+Darwin+teor%C3%ADa'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[86] ES-GEN ~  9.2s chunks=3 | route=britannica.com, elpais.com | first: History & Society
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=vinos+Rioja+Tempranillo+crianza failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=vinos+Rioja+Tempranillo+crianza'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+[87] ES-GEN ~  9.0s chunks=3 | route=britannica.com, folha.uol.com.br | first: History & Society
+Site folha.uol.com.br failed: GET https://folha.uol.com.br/busca/?q=f%C3%BAtbol+La+Liga+clasificaci%C3%B3n+2026 failed: Server error '502 Bad Gateway' for url 'https://folha.uol.com.br/busca/?q=f%C3%BAtbol+La+Liga+clasificaci%C3%B3n+2026'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
+Site elpais.com failed: GET https://elpais.com/buscador/?q=f%C3%BAtbol+La+Liga+clasificaci%C3%B3n+2026 failed: Client error '403 Forbidden' for url 'https://elpais.com/buscador/?q=f%C3%BAtbol+La+Liga+clasificaci%C3%B3n+2026'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+[88] ES-GEN ✗ 11.3s chunks=0 | route=folha.uol.com.br, elpais.com | first: —
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=flamenco+origen+historia+Espa%C3%B1a+Andaluc%C3%ADa failed: [Errno 11001] getaddrinfo failed
+[89] ES-GEN ~ 10.5s chunks=3 | route=britannica.com, agenciatributaria.es | first: History & Society
+Site elpais.com failed: GET https://elpais.com/buscador/?q=energ%C3%ADa+solar+paneles+fotovoltaicos+Espa%C3%B1a failed: Client error '403 Forbidden' for url 'https://elpais.com/buscador/?q=energ%C3%ADa+solar+paneles+fotovoltaicos+Espa%C3%B1a'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+Site agenciatributaria.es failed: GET https://agenciatributaria.es/AEAT.search?p_q=energ%C3%ADa+solar+paneles+fotovoltaicos+Espa%C3%B1a failed: [Errno 11001] getaddrinfo failed
+[90] ES-GEN ✗  9.5s chunks=0 | route=agenciatributaria.es, elpais.com | first: —
+
+==========================================================================================
+DONE in 15.8 min  |  total tokens: input=59474 output=9179  |  cost: $0.0000
+
+Status breakdown:
+  partial     55/90  (61%)
+  blocked     31/90  (34%)
+  ok           4/90  (4%)
+
+Per-language / per-category:
+  PT-TAX   ok= 0 partial= 7 blocked= 8  | mean 11.3s, 1.4 chunks/q
+  EN-TAX   ok= 1 partial=13 blocked= 1  | mean 9.8s, 2.8 chunks/q
+  ES-TAX   ok= 0 partial= 0 blocked=15  | mean 10.8s, 0.0 chunks/q
+  PT-GEN   ok= 0 partial=12 blocked= 3  | mean 10.4s, 2.4 chunks/q
+  EN-GEN   ok= 3 partial=11 blocked= 1  | mean 10.6s, 2.8 chunks/q
+  ES-GEN   ok= 0 partial=12 blocked= 3  | mean 10.4s, 2.4 chunks/q
+
+Site routing distribution (top 10):
+  jusbrasil.com.br          picked  46x
+  britannica.com            picked  40x
+  agenciatributaria.es      picked  29x
+  folha.uol.com.br          picked  29x
+  gov.uk                    picked  20x
+  elpais.com                picked  13x
+  arxiv.org                 picked   3x
+
+Selector cache (sites the LLM extracted patterns for):
+
+Full table written to ./test-cache-90/results.json

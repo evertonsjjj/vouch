@@ -99,7 +99,7 @@ async def discover_selectors(page: Any, query: str, *, llm: LLMClient, site=None
     """Inspect *page* and return ``{"input": <sel>, "submit": <sel|None>, ...}``."""
     try:
         candidates = await page.evaluate(_SCAN_JS)
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         log.warning("DOM scan failed: %s", e)
         return None
 

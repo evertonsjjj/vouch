@@ -5,7 +5,7 @@ from __future__ import annotations
 import base64
 import logging
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, ClassVar
 
 from .._llm import LLMClient
 
@@ -21,25 +21,25 @@ class CaptchaResult:
     reason: str = ""
 
     @classmethod
-    def unsupported(cls, kind: str) -> "CaptchaResult":
+    def unsupported(cls, kind: str) -> CaptchaResult:
         return cls(solved=False, kind=kind, reason=f"{kind} is not supported")
 
 
 _OCR_PROMPT = (
     "You are looking at a CAPTCHA image. Read the text shown and reply with JSON "
-    "of the form {\"text\": \"...\", \"confidence\": 0.0-1.0}. "
+    'of the form {"text": "...", "confidence": 0.0-1.0}. '
     "Do not add any other commentary."
 )
 
 _GRID_PROMPT = (
     "You are looking at a CAPTCHA image grid asking the user to select all squares "
-    "containing: {target}. Reply with JSON {\"indices\": [0,1,2,...], \"confidence\": 0.0-1.0} "
+    'containing: {target}. Reply with JSON {"indices": [0,1,2,...], "confidence": 0.0-1.0} '
     "where indices are 0-based, left-to-right, top-to-bottom."
 )
 
 
 class CaptchaSolver:
-    SUPPORTED = {"text", "image_grid"}
+    SUPPORTED: ClassVar[set[str]] = {"text", "image_grid"}
 
     def __init__(
         self,
@@ -63,7 +63,11 @@ class CaptchaSolver:
         if kind not in self.SUPPORTED:
             return CaptchaResult.unsupported(kind)
         b64 = base64.b64encode(image).decode("ascii")
-        prompt = _OCR_PROMPT if kind == "text" else _GRID_PROMPT.format(target=target or "the requested item")
+        prompt = (
+            _OCR_PROMPT
+            if kind == "text"
+            else _GRID_PROMPT.format(target=target or "the requested item")
+        )
         last: CaptchaResult = CaptchaResult(solved=False, kind=kind)
         for attempt in range(self.max_attempts):
             try:
@@ -71,7 +75,7 @@ class CaptchaSolver:
                 from .._llm import _parse_json_loose
 
                 data = _parse_json_loose(txt)
-            except Exception as e:  # noqa: BLE001
+            except Exception as e:
                 log.warning("Captcha attempt %d failed: %s", attempt + 1, e)
                 continue
             confidence = float(data.get("confidence", 0.0))

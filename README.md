@@ -3,6 +3,7 @@
 > **Curated AI search for agents.** Bring your own sources, your own LLM. The self-hosted, agent-ready alternative to Tavily and Perplexity for trusted-source research.
 
 [![PyPI version](https://img.shields.io/pypi/v/curio)](https://pypi.org/project/curio/)
+[![CI](https://github.com/yourhandle/curio/actions/workflows/ci.yml/badge.svg)](https://github.com/yourhandle/curio/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 
@@ -34,6 +35,7 @@ for r in results.chunks:
 - [Search depth](#search-depth)
 - [Smart Site Routing](#smart-site-routing)
 - [Selector cache](#selector-cache)
+- [Profile registry](#profile-registry)
 - [LLM configuration (BYOK)](#llm-configuration-byok)
 - [Using as an agent tool](#using-as-an-agent-tool)
 - [Optional features](#optional-features)
@@ -46,6 +48,19 @@ for r in results.chunks:
 - [References and prior art](#references-and-prior-art)
 
 ---
+
+## What's new in 0.2
+
+- **CSS selector pinning** — the AI now examines DOM context and emits reusable `{container, title, url, snippet, date, author}` selectors. Cached in SQLite; subsequent calls replay via `lxml.cssselect` — no LLM, milliseconds.
+- **Auto-escalation chain** — `http → browser → stealth`. The engine learns the cheapest tier each site needs and persists it.
+- **Auto-DNS resolution** — fixes wrong-host catalog entries automatically (`agenciatributaria.es` → `sede.agenciatributaria.gob.es`).
+- **Profile registry** — 24 curated profiles ship in the box (arxiv, github, huggingface, gov.uk, irs.gov, sede.agenciatributaria, jusbrasil, MDN, pypi, ...).
+- **Async API** — `await engine.asearch(query, ...)` alongside the sync API.
+- **Result formatting** — `result.to_markdown()`, `to_json()`.
+- **Smarter quality detector** — flags megamenu shells, recursive search-page links, no-results sentinels in PT/ES/EN.
+- **Probe crawl on `add()`** — opt-in: site profile is learned the moment you add it, not on the first user query.
+
+See [CHANGELOG.md](CHANGELOG.md) for the full list.
 
 ## Why curio
 
@@ -366,6 +381,46 @@ engine.invalidate_cache("cvm.gov.br")
 ```
 
 The cache lives at `~/.curio/selectors.db` — a tiny SQLite file you can ship in version control if you want a head-start for teammates.
+
+## Profile registry
+
+curio ships with **curated profiles** for popular sites — preconfigured `Site` objects with the right `search_url_template`, tags, and category. You don't have to figure out arxiv's search URL or how to phrase HuggingFace's description.
+
+```python
+from curio import SearchEngine, get_profile, list_profiles
+
+engine = SearchEngine(llm="ollama/qwen2.5:14b")
+
+# List what's bundled
+list_profiles()
+# → ['arxiv.org', 'bbc.com', 'crates.io', 'developer.mozilla.org',
+#    'docs.python.org', 'elpais.com', 'en.wikipedia.org', 'es.wikipedia.org',
+#    'folha.uol.com.br', 'github.com', 'gov.uk', 'huggingface.co', 'irs.gov',
+#    'jusbrasil.com.br', 'news.ycombinator.com', 'npmjs.com',
+#    'paperswithcode.com', 'pkg.go.dev', 'planalto.gov.br', 'pt.wikipedia.org',
+#    'pypi.org', 'reddit.com', 'sede.agenciatributaria.gob.es',
+#    'stackoverflow.com']
+
+# Use a profile directly
+engine.add(get_profile("arxiv.org"))
+engine.add(get_profile("github.com"))
+engine.add(get_profile("jusbrasil.com.br"))   # for BR legal/tax queries
+
+results = engine.search("LLM benchmarks 2026")
+```
+
+Or via CLI:
+
+```bash
+curio profiles list                      # show bundled profiles
+curio profiles show arxiv.org            # see one in detail
+curio profiles import arxiv.org,github.com,huggingface.co
+curio profiles import all                # add everything to your local catalog
+```
+
+The profile YAML lives at [`curio/profiles/builtin.yaml`](curio/profiles/builtin.yaml). Community contributions via PR welcome — see the [`new_profile`](.github/ISSUE_TEMPLATE/new_profile.md) issue template.
+
+A separate community-maintained registry (`curio-profiles` repo) is on the roadmap; teams can publish their domain-specific profiles there and run `curio profiles update` to pull them.
 
 ## LLM configuration (BYOK)
 

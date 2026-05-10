@@ -67,9 +67,11 @@ class LLMRouter(Router):
                 temperature=0.0,
                 max_tokens=600,
             )
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             log.warning("LLM router fell back to all-sites: %s", e)
-            return [RouteDecision(site=s.url, score=0.5, reason="llm-error") for s in sites[: ctx.top_k]]
+            return [
+                RouteDecision(site=s.url, score=0.5, reason="llm-error") for s in sites[: ctx.top_k]
+            ]
 
         return _coerce_decisions(data, sites, ctx.top_k)
 
@@ -97,7 +99,9 @@ def _coerce_decisions(data: Any, sites, top_k: int) -> list[RouteDecision]:
         except (TypeError, ValueError):
             score = 0.5
         decisions.append(
-            RouteDecision(site=url, score=max(0.0, min(1.0, score)), reason=str(item.get("reason", "")))
+            RouteDecision(
+                site=url, score=max(0.0, min(1.0, score)), reason=str(item.get("reason", ""))
+            )
         )
     if not decisions:
         raise RouterError("LLM router returned no usable picks")

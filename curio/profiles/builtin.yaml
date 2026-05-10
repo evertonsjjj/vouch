@@ -1,0 +1,169 @@
+# Curated profiles bundled with curio.
+# These are tested against real pages and known to produce clean results.
+# The community-maintained registry will live at github.com/yourhandle/curio-profiles
+# and `curio profiles update` will pull updates.
+
+profiles:
+  # ---- Academic & ML --------------------------------------------------
+  - url: arxiv.org
+    category: academic ML/AI papers
+    description: >
+      Preprints in CS, ML, AI, math, physics, biology — primary source for
+      academic ML/AI research papers.
+    tags: [research, ml, ai, academic, en]
+    search_url_template: "/search/?searchtype=all&query={query}"
+
+  - url: huggingface.co
+    category: ML models and datasets
+    description: >
+      Repository of open-source ML models, datasets, and benchmarks.
+    tags: [ml, ai, models, en]
+    search_url_template: "/models?search={query}"
+
+  - url: paperswithcode.com
+    category: ML papers + code links
+    description: >
+      ML papers paired with their official code repositories.
+    tags: [research, ml, ai, en]
+    search_url_template: "/search?q_meta=&q_type=&q={query}"
+
+  # ---- Code & dev -----------------------------------------------------
+  - url: github.com
+    category: open-source code
+    description: >
+      Code repositories, libraries, frameworks, tools — primary source for
+      open-source software.
+    tags: [code, dev, open-source, en]
+    search_url_template: "/search?q={query}&type=repositories"
+
+  - url: pypi.org
+    category: Python packages
+    description: Official Python package index.
+    tags: [python, packages, dev, en]
+    search_url_template: "/search/?q={query}"
+
+  - url: npmjs.com
+    category: JavaScript / Node.js packages
+    description: Official npm registry.
+    tags: [javascript, node, packages, dev, en]
+    search_url_template: "/search?q={query}"
+
+  - url: crates.io
+    category: Rust packages
+    description: Official Rust crates registry.
+    tags: [rust, packages, dev, en]
+    search_url_template: "/search?q={query}"
+
+  - url: pkg.go.dev
+    category: Go packages
+    description: Official Go module index.
+    tags: [go, packages, dev, en]
+    search_url_template: "/search?q={query}"
+
+  # ---- Web docs -------------------------------------------------------
+  - url: developer.mozilla.org
+    category: web development docs (MDN)
+    description: >
+      MDN Web Docs — official documentation for HTML, CSS, JavaScript, web APIs.
+    tags: [web, frontend, javascript, docs, en]
+    search_url_template: "/en-US/search?q={query}"
+
+  - url: docs.python.org
+    category: Python language documentation
+    description: Official Python language and stdlib documentation.
+    tags: [python, docs, en]
+    search_url_template: "/3/search.html?q={query}"
+
+  # ---- Encyclopedias --------------------------------------------------
+  # Wikipedia HTTP requests get 403 with default UAs — recommend browser tier.
+  - url: en.wikipedia.org
+    category: general encyclopedia (English)
+    description: English-language general encyclopedia.
+    tags: [encyclopedia, reference, en]
+    search_url_template: "/wiki/Special:Search?search={query}"
+
+  - url: pt.wikipedia.org
+    category: enciclopédia geral em português
+    description: Enciclopédia geral em português — conceitos, história, biografias.
+    tags: [enciclopedia, referencia, pt]
+    search_url_template: "/wiki/Special:Search?search={query}"
+
+  - url: es.wikipedia.org
+    category: enciclopedia general (español)
+    description: Enciclopedia general en español.
+    tags: [enciclopedia, referencia, es]
+    search_url_template: "/wiki/Special:Search?search={query}"
+
+  # ---- Brazilian sources ---------------------------------------------
+  - url: jusbrasil.com.br
+    category: legislação e jurisprudência Brasil
+    description: >
+      Conteúdo jurídico, leis, decisões, artigos sobre direito tributário,
+      fiscal, previdenciário e civil — base para imposto, ICMS, IRPF, CVM, regulação BR.
+    tags: [legal, tributario, fiscal, br, pt]
+    search_url_template: "/busca?q={query}"
+
+  - url: planalto.gov.br
+    category: leis e decretos federais Brasil
+    description: Casa Civil — leis, decretos, medidas provisórias.
+    tags: [gov, leis, br, pt]
+
+  # ---- Government / regulatory ---------------------------------------
+  - url: gov.uk
+    category: UK government services and tax (HMRC)
+    description: >
+      Official UK government — HMRC tax, VAT, business, benefits, regulations.
+    tags: [gov, tax, uk, hmrc, vat, en]
+    search_url_template: "/search/all?keywords={query}"
+
+  - url: irs.gov
+    category: US IRS — federal taxes
+    description: Internal Revenue Service — forms, publications, tax topics.
+    tags: [gov, tax, us, irs, en]
+    search_url_template: "/search?affiliate=irs&query={query}"
+
+  # Note: agenciatributaria.es DNS-fails. Real host is sede.agenciatributaria.gob.es.
+  - url: sede.agenciatributaria.gob.es
+    category: Hacienda España (Agencia Tributaria)
+    description: >
+      Agencia Tributaria de España — IRPF, IVA, declaración renta, autónomos.
+    tags: [gov, tax, es, hacienda, irpf, iva]
+    search_url_template: "/AEAT.search?p_q={query}"
+
+  # ---- News -----------------------------------------------------------
+  - url: bbc.com
+    category: BBC News (multi-language)
+    description: BBC News — international, politics, business, science.
+    tags: [news, en]
+    search_url_template: "/search?q={query}"
+
+  - url: folha.uol.com.br
+    category: jornal Folha de São Paulo (BR)
+    description: Folha — política, economia, cultura, ciência.
+    tags: [news, br, pt, jornal]
+    search_url_template: "/busca/?q={query}"
+
+  - url: elpais.com
+    category: periódico El País (España)
+    description: El País — noticias generales en español.
+    tags: [news, es, espanol, periodico]
+    search_url_template: "/buscador/?q={query}"
+
+  # ---- Reference & dev community --------------------------------------
+  - url: stackoverflow.com
+    category: programmer Q&A
+    description: Stack Overflow — practical programming questions and answers.
+    tags: [dev, qa, programming, en]
+    search_url_template: "/search?q={query}"
+
+  - url: news.ycombinator.com
+    category: Hacker News
+    description: Tech / startup discussion.
+    tags: [tech, discussion, en]
+    # HN has no on-site search bar — algolia powers it externally.
+
+  - url: reddit.com
+    category: Reddit (general)
+    description: Reddit — discussions across all topics.
+    tags: [discussion, en]
+    search_url_template: "/search/?q={query}"

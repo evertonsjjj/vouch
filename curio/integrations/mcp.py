@@ -34,7 +34,7 @@ def run_stdio_server(*, catalog_path: Path, llm: str = "ollama/qwen2.5:14b") -> 
     server = Server("curio")
 
     @server.list_tools()
-    async def _list() -> list["Tool"]:
+    async def _list() -> list[Tool]:
         return [
             Tool(
                 name="search_curated_sources",
@@ -66,7 +66,7 @@ def run_stdio_server(*, catalog_path: Path, llm: str = "ollama/qwen2.5:14b") -> 
         ]
 
     @server.call_tool()
-    async def _call(name: str, arguments: dict[str, Any]) -> list["TextContent"]:
+    async def _call(name: str, arguments: dict[str, Any]) -> list[TextContent]:
         if name == "list_sources":
             payload = engine.catalog.to_dicts()
             return [TextContent(type="text", text=json.dumps(payload, indent=2))]

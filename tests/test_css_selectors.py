@@ -6,7 +6,6 @@ from curio import Site
 from curio.discovery.cache import SelectorCache
 from curio.extraction import css_selectors as css
 
-
 _HTML = """
 <html><body>
   <header>

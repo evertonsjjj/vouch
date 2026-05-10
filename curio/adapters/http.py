@@ -42,7 +42,9 @@ class HTTPAdapter(SiteAdapter):
     def close(self) -> None:
         self._client.close()
 
-    @retry(stop=stop_after_attempt(3), wait=wait_exponential_jitter(initial=0.5, max=4), reraise=True)
+    @retry(
+        stop=stop_after_attempt(3), wait=wait_exponential_jitter(initial=0.5, max=4), reraise=True
+    )
     def _fetch(self, url: str, *, accept_language: str | None = None) -> httpx.Response:
         headers = {"Accept-Language": accept_language} if accept_language else None
         resp = self._client.get(url, headers=headers)
@@ -56,14 +58,16 @@ class HTTPAdapter(SiteAdapter):
         if ctx.depth == 0:
             return self._homepage_chunks(ctx)
         # Last-resort fallback: just dump the homepage.
-        log.info("HTTP adapter cannot perform interactive search on %s; serving homepage.", site.url)
+        log.info(
+            "HTTP adapter cannot perform interactive search on %s; serving homepage.", site.url
+        )
         return self._homepage_chunks(ctx)
 
     def _homepage_chunks(self, ctx: AdapterContext) -> list[Chunk]:
         url = ctx.site.homepage
         try:
             resp = self._fetch(url)
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             raise AdapterError(f"GET {url} failed: {e}") from e
         chunk = _extract_chunk(resp.text, source_url=url, site=ctx.site)
         return [chunk] if chunk else []
@@ -82,7 +86,7 @@ class HTTPAdapter(SiteAdapter):
         accept_lang = accept_language_for(ctx.query)
         try:
             resp = self._fetch(url, accept_language=accept_lang)
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             raise AdapterError(f"GET {url} failed: {e}") from e
         chunks = to_chunks(
             resp.text,
@@ -105,7 +109,7 @@ class HTTPAdapter(SiteAdapter):
                 full = trafilatura.extract(resp.text, include_links=False) or ""
                 if full:
                     c = c.model_copy(update={"content": full})
-            except Exception as e:  # noqa: BLE001
+            except Exception as e:
                 log.debug("full-fetch failed for %s: %s", c.source_url, e)
             out.append(c)
         return out
@@ -144,7 +148,9 @@ def _extract_title(html: str) -> str | None:
     return _strip(m.group(1)) if m else None
 
 
-def _split_into_result_chunks(html: str, *, source_url: str, site, max_results: int = 10) -> list[Chunk]:
+def _split_into_result_chunks(
+    html: str, *, source_url: str, site, max_results: int = 10
+) -> list[Chunk]:
     """Heuristic: pull out <a> tags pointing at the same domain, treat them as result rows."""
     chunks: list[Chunk] = []
     seen: set[str] = set()

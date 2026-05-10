@@ -58,6 +58,8 @@ class EngineConfig(BaseModel):
     # Resilience -----------------------------------------------------------
     auto_resolve_dns: bool = False
     auto_escalate_adapter: bool = True
+    auto_probe_on_add: bool = False
+    probe_queries: int = 1  # how many probe queries to run when auto-probing
 
     # Misc -----------------------------------------------------------------
     verbose: bool = False

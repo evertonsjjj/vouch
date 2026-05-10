@@ -6,7 +6,6 @@ import json
 import subprocess
 import sys
 from pathlib import Path
-from typing import Optional
 
 import typer
 from rich.console import Console
@@ -23,15 +22,19 @@ app = typer.Typer(
 )
 catalog_app = typer.Typer(help="Manage the site catalog.", no_args_is_help=True)
 mcp_app = typer.Typer(help="Run curio as an MCP server.", no_args_is_help=True)
+profiles_app = typer.Typer(help="Browse curated site profiles.", no_args_is_help=True)
 app.add_typer(catalog_app, name="catalog")
 app.add_typer(mcp_app, name="mcp")
+app.add_typer(profiles_app, name="profiles")
 console = Console()
 
 
 @app.callback(invoke_without_command=True)
 def _main(
     ctx: typer.Context,
-    version: bool = typer.Option(False, "--version", "-V", is_eager=True, help="Show version and exit"),
+    version: bool = typer.Option(
+        False, "--version", "-V", is_eager=True, help="Show version and exit"
+    ),
 ):
     if version:
         console.print(f"curio {__version__}")
@@ -47,8 +50,10 @@ def _main(
 @app.command()
 def search(
     query: str,
-    catalog: Optional[Path] = typer.Option(None, "--catalog", "-c", help="YAML catalog path"),
-    sites: Optional[str] = typer.Option(None, "--sites", help="Comma-separated list (overrides catalog)"),
+    catalog: Path | None = typer.Option(None, "--catalog", "-c", help="YAML catalog path"),
+    sites: str | None = typer.Option(
+        None, "--sites", help="Comma-separated list (overrides catalog)"
+    ),
     llm: str = typer.Option("ollama/qwen2.5:14b", "--llm"),
     depth: int = typer.Option(1, "--depth", "-d", min=0, max=3),
     json_out: bool = typer.Option(False, "--json", help="Print JSON instead of table"),
@@ -113,7 +118,7 @@ def install_browser(
 def serve(
     port: int = typer.Option(8080, "--port", "-p"),
     host: str = typer.Option("127.0.0.1", "--host"),
-    catalog: Optional[Path] = typer.Option(None, "--catalog", "-c"),
+    catalog: Path | None = typer.Option(None, "--catalog", "-c"),
 ):
     """Start the FastAPI dashboard."""
     try:
@@ -133,9 +138,9 @@ def serve(
 @catalog_app.command("add")
 def catalog_add(
     url: str,
-    category: Optional[str] = typer.Option(None, "--category"),
-    description: Optional[str] = typer.Option(None, "--description", "-D"),
-    tags: Optional[str] = typer.Option(None, "--tags", help="Comma-separated tags"),
+    category: str | None = typer.Option(None, "--category"),
+    description: str | None = typer.Option(None, "--description", "-D"),
+    tags: str | None = typer.Option(None, "--tags", help="Comma-separated tags"),
     db: Path = typer.Option(Path("~/.curio/catalog.db").expanduser(), "--db"),
 ):
     cat = Catalog(db.expanduser())
@@ -217,6 +222,69 @@ def mcp_serve(
         console.print(f"[red]MCP extras not installed: {e}[/red]")
         raise typer.Exit(1) from None
     run_stdio_server(catalog_path=catalog, llm=llm)
+
+
+# --- profiles sub-app -------------------------------------------------------
+
+
+@profiles_app.command("list")
+def profiles_list():
+    """List all curated site profiles bundled with curio."""
+    from .profiles import list_profiles
+
+    domains = list_profiles()
+    if not domains:
+        console.print("[yellow]No profiles bundled.[/yellow]")
+        return
+    console.print(f"[bold]{len(domains)}[/bold] curated profile(s):")
+    for d in domains:
+        console.print(f"  • {d}")
+
+
+@profiles_app.command("show")
+def profiles_show(domain: str):
+    """Show a single profile in detail."""
+    from .profiles import get_profile
+
+    site = get_profile(domain)
+    if not site:
+        console.print(f"[yellow]No profile for {domain!r}[/yellow]")
+        raise typer.Exit(1)
+    table = Table(show_header=False)
+    table.add_row("URL", site.url)
+    table.add_row("Category", site.category or "-")
+    table.add_row("Description", site.description or "-")
+    table.add_row("Tags", ", ".join(site.tags) or "-")
+    table.add_row("Search URL template", site.search_url_template or "-")
+    table.add_row("Behavior", site.behavior)
+    console.print(table)
+
+
+@profiles_app.command("import")
+def profiles_import(
+    domains: str = typer.Argument(..., help="Comma-separated list, or 'all'"),
+    db: Path = typer.Option(Path("~/.curio/catalog.db").expanduser(), "--db"),
+):
+    """Import one or more curated profiles into the local catalog."""
+    from .catalog import Catalog
+    from .profiles import get_profile, list_profiles
+
+    cat = Catalog(db.expanduser())
+    targets = (
+        list_profiles()
+        if domains.strip().lower() == "all"
+        else [d.strip() for d in domains.split(",") if d.strip()]
+    )
+    added = 0
+    for d in targets:
+        site = get_profile(d)
+        if not site:
+            console.print(f"[yellow]skip {d}: no profile[/yellow]")
+            continue
+        cat.add(site, replace=True)
+        added += 1
+        console.print(f"[green]+[/green] {site.url}")
+    console.print(f"\n[bold]{added}[/bold] profile(s) imported.")
 
 
 if __name__ == "__main__":

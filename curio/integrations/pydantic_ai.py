@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
 
 from ..engine import SearchEngine
 from ..models import SearchResult
@@ -22,7 +21,7 @@ def curio_tool(
     *,
     default_depth: int = 1,
     **engine_kwargs,
-) -> "Tool":
+) -> Tool:
     """Build a PydanticAI ``Tool`` that wraps a curio SearchEngine.
 
     Usage::

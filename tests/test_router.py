@@ -21,7 +21,9 @@ def test_tag_router_scores_overlap(sample_sites):
 
 def test_tag_router_falls_back_when_no_overlap(sample_sites):
     r = TagRouter(fall_back_to_all=True)
-    decisions = r.route(RoutingContext(query="completely unrelated query", sites=sample_sites, top_k=2))
+    decisions = r.route(
+        RoutingContext(query="completely unrelated query", sites=sample_sites, top_k=2)
+    )
     assert len(decisions) > 0
 
 

@@ -14,9 +14,7 @@ except ImportError:
     try:
         from crewai_tools import BaseTool  # type: ignore
     except ImportError as e:
-        raise ImportError(
-            "CrewAI integration requires crewai. pip install 'curio[crewai]'"
-        ) from e
+        raise ImportError("CrewAI integration requires crewai. pip install 'curio[crewai]'") from e
 
 from pydantic import BaseModel, Field
 

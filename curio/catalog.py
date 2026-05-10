@@ -131,7 +131,7 @@ class _SiteRow(_Base):
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
     @classmethod
-    def from_site(cls, site: Site) -> "_SiteRow":
+    def from_site(cls, site: Site) -> _SiteRow:
         return cls(
             url=site.url,
             category=site.category,
@@ -185,13 +185,15 @@ class Catalog:
                 canonical = resolve_canonical_host(site.url)
                 if canonical and canonical != site.url:
                     site = site.model_copy(update={"url": canonical})
-            except Exception:  # noqa: BLE001
+            except Exception:
                 # never block add() on a DNS probe failure
                 pass
         with Session(self._engine) as s:
             existing = s.get(_SiteRow, site.url)
             if existing and not replace:
-                raise CatalogError(f"Site {site.url!r} already exists; pass replace=True to overwrite.")
+                raise CatalogError(
+                    f"Site {site.url!r} already exists; pass replace=True to overwrite."
+                )
             row = _SiteRow.from_site(site)
             s.merge(row)
             s.commit()
@@ -280,18 +282,14 @@ class Catalog:
                 **({"behavior": s.behavior} if s.behavior != "natural" else {}),
                 **({"rate_limit": s.rate_limit} if s.rate_limit else {}),
                 **({"requires_login": True} if s.requires_login else {}),
-                **(
-                    {"search_url_template": s.search_url_template}
-                    if s.search_url_template
-                    else {}
-                ),
+                **({"search_url_template": s.search_url_template} if s.search_url_template else {}),
             }
             for s in self.list()
         ]
         return yaml.safe_dump({"sites": rows}, sort_keys=False, allow_unicode=True)
 
     @classmethod
-    def from_yaml(cls, path: str | Path, *, db_path: str | Path | None = None) -> "Catalog":
+    def from_yaml(cls, path: str | Path, *, db_path: str | Path | None = None) -> Catalog:
         cat = cls(db_path)
         cat.load_yaml(path, replace=True)
         return cat

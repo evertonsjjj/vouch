@@ -1,0 +1,14 @@
+Running 90 queries against 10 sites...
+
+[ 1] PT-TAX ✓ 43.7s chunks=3 | route=jusbrasil.com.br, sede.agenciatributaria.gob.es | first: Simuladores
+[ 2] PT-TAX ✓ 16.2s chunks=3 | route=jusbrasil.com.br, gov.uk | first: Benefits
+[ 3] PT-TAX ✓ 18.3s chunks=3 | route=jusbrasil.com.br, gov.uk | first: Benefits
+[ 4] PT-TAX ✓ 18.3s chunks=3 | route=jusbrasil.com.br, gov.uk | first: Benefits
+[ 5] PT-TAX ✓ 22.4s chunks=3 | route=jusbrasil.com.br, sede.agenciatributaria.gob.es | first: Suscripción newsletter
+[ 6] PT-TAX ✓ 22.3s chunks=3 | route=jusbrasil.com.br, sede.agenciatributaria.gob.es | first: Suscripción newsletter
+[ 7] PT-TAX ✓ 22.7s chunks=3 | route=jusbrasil.com.br, sede.agenciatributaria.gob.es | first: Suscripción newsletter
+[ 8] PT-TAX ✓ 18.3s chunks=3 | route=jusbrasil.com.br, gov.uk | first: Benefits
+[ 9] PT-TAX ✓ 18.7s chunks=2 | route=folha.uol.com.br, jusbrasil.com.br | first: folha.uol.com.br
+[10] PT-TAX ✓ 21.8s chunks=3 | route=jusbrasil.com.br, sede.agenciatributaria.gob.es | first: Suscripción newsletter
+[11] PT-TAX ✓ 43.6s chunks=3 | route=britannica.com, jusbrasil.com.br | first: Advertising
+[12] PT-TAX ✓ 15.9s chunks=3 | route=jusbrasil.com.br, gov.uk | first: Benefits

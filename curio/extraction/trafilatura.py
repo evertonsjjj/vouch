@@ -120,9 +120,9 @@ def to_chunks(
     source_url: str,
     site: Site,
     max_results: int = 25,
-    llm: "Any | None" = None,
+    llm: Any | None = None,
     query: str | None = None,
-    cache: "Any | None" = None,
+    cache: Any | None = None,
 ) -> list[Chunk]:
     """Best-effort extraction of result rows from any results page.
 

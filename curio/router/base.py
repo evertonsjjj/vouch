@@ -27,7 +27,9 @@ class Router(Protocol):
     def route(self, ctx: RoutingContext) -> list[RouteDecision]: ...
 
 
-def filter_by_tags(sites: list[Site], only: list[str] | None, exclude: list[str] | None) -> list[Site]:
+def filter_by_tags(
+    sites: list[Site], only: list[str] | None, exclude: list[str] | None
+) -> list[Site]:
     out = list(sites)
     if only:
         wanted = set(only)

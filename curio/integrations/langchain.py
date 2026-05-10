@@ -38,7 +38,7 @@ class CurioSearchTool(BaseTool):
         self.engine = build_engine(catalog, **engine_kwargs)
 
     @classmethod
-    def from_yaml(cls, path: str | Path, **kwargs) -> "CurioSearchTool":
+    def from_yaml(cls, path: str | Path, **kwargs) -> CurioSearchTool:
         return cls(catalog=path, **kwargs)
 
     def _run(self, query: str, depth: int = 1) -> str:  # type: ignore[override]

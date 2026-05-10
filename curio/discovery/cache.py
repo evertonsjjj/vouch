@@ -82,7 +82,9 @@ class SelectorCache:
 
     # ---- write -------------------------------------------------------
 
-    def set(self, domain: str, selectors: dict[str, Any], *, fingerprint: str | None = None) -> None:
+    def set(
+        self, domain: str, selectors: dict[str, Any], *, fingerprint: str | None = None
+    ) -> None:
         fp = fingerprint or "v1"
         with Session(self._engine) as s:
             from sqlalchemy import select

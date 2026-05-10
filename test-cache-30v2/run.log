@@ -1,0 +1,57 @@
+Running 30 queries against 10 sites...
+
+[ 1] PT-TAX ✓ 43.1s chunks=3 | route=jusbrasil.com.br, sede.agenciatributaria.gob.es | first: Simuladores
+[ 2] PT-TAX ✓ 15.5s chunks=2 | route=jusbrasil.com.br, folha.uol.com.br | first: folha.uol.com.br
+[ 3] PT-TAX ✓ 21.0s chunks=3 | route=jusbrasil.com.br, sede.agenciatributaria.gob.es | first: Suscripción newsletter
+[ 4] PT-TAX ✓ 22.6s chunks=3 | route=jusbrasil.com.br, sede.agenciatributaria.gob.es | first: Suscripción newsletter
+[ 5] PT-TAX ✓ 21.8s chunks=3 | route=jusbrasil.com.br, sede.agenciatributaria.gob.es | first: Suscripción newsletter
+[ 6] EN-TAX ✓ 21.3s chunks=3 | route=jusbrasil.com.br, sede.agenciatributaria.gob.es | first: Suscripción newsletter
+[ 7] EN-TAX ✓ 17.5s chunks=3 | route=jusbrasil.com.br, gov.uk | first: Benefits
+[ 8] EN-TAX ✓ 22.4s chunks=3 | route=jusbrasil.com.br, sede.agenciatributaria.gob.es | first: Suscripción newsletter
+[ 9] EN-TAX ✓ 17.1s chunks=3 | route=gov.uk, jusbrasil.com.br | first: Benefits
+[10] EN-TAX ✓ 20.1s chunks=3 | route=gov.uk, britannica.com | first: Profit-Sharing Plan
+[11] ES-TAX ✓ 21.6s chunks=3 | route=sede.agenciatributaria.gob.es, jusbrasil.com.br | first: Suscripción newsletter
+[12] ES-TAX ✓ 21.8s chunks=3 | route=sede.agenciatributaria.gob.es, jusbrasil.com.br | first: Suscripción newsletter
+[13] ES-TAX ✓ 21.7s chunks=3 | route=sede.agenciatributaria.gob.es, jusbrasil.com.br | first: Suscripción newsletter
+[14] ES-TAX ✓ 22.6s chunks=3 | route=sede.agenciatributaria.gob.es, jusbrasil.com.br | first: Suscripción newsletter
+[15] ES-TAX ✓ 22.5s chunks=3 | route=jusbrasil.com.br, sede.agenciatributaria.gob.es | first: Suscripción newsletter
+[16] PT-GEN ✓ 39.2s chunks=3 | route=britannica.com, folha.uol.com.br | first: History & Society
+[17] PT-GEN ✓ 19.6s chunks=2 | route=britannica.com, folha.uol.com.br | first: History & Society
+[18] PT-GEN ~ 19.1s chunks=1 | route=britannica.com, elpais.com | first: History & Society
+[19] PT-GEN ✓ 19.3s chunks=2 | route=britannica.com, folha.uol.com.br | first: History & Society
+[20] PT-GEN ✓ 16.0s chunks=2 | route=britannica.com, folha.uol.com.br | first: History & Society
+[21] EN-GEN ~ 19.4s chunks=1 | route=britannica.com, elpais.com | first: History & Society
+[22] EN-GEN ✓ 21.3s chunks=3 | route=britannica.com, folha.uol.com.br | first: Tragedy - Asian Drama, Absence, Elements
+[23] EN-GEN ✓ 22.6s chunks=3 | route=britannica.com | first: Semiconservative DNA replication (genetics)
+[24] EN-GEN ~ 20.6s chunks=1 | route=britannica.com, elpais.com | first: History & Society
+[25] EN-GEN ✓ 22.1s chunks=2 | route=britannica.com, folha.uol.com.br | first: History & Society
+[26] ES-GEN ~ 20.2s chunks=1 | route=britannica.com, elpais.com | first: History & Society
+[27] ES-GEN ✓ 20.3s chunks=2 | route=britannica.com, folha.uol.com.br | first: History & Society
+[28] ES-GEN ✓ 20.3s chunks=1 | route=britannica.com | first: History & Society
+[29] ES-GEN ✓ 20.7s chunks=2 | route=britannica.com, folha.uol.com.br | first: History & Society
+[30] ES-GEN ✓ 21.9s chunks=2 | route=britannica.com, folha.uol.com.br | first: History & Society
+
+==========================================================================================
+DONE in 10.9 min  |  tokens: input=17945 output=3078  |  cost: $0.0000
+
+Status breakdown:
+  ok         26/30
+  partial    4/30
+
+Per-category:
+  PT-TAX: ok=5 partial=0 blocked=0 | mean 24.8s, 2.8 chunks/q
+  EN-TAX: ok=5 partial=0 blocked=0 | mean 19.7s, 3.0 chunks/q
+  ES-TAX: ok=5 partial=0 blocked=0 | mean 22.0s, 3.0 chunks/q
+  PT-GEN: ok=4 partial=1 blocked=0 | mean 22.6s, 2.0 chunks/q
+  EN-GEN: ok=3 partial=2 blocked=0 | mean 21.2s, 2.0 chunks/q
+  ES-GEN: ok=4 partial=1 blocked=0 | mean 20.7s, 1.6 chunks/q
+
+Cache state per site:
+  jusbrasil.com.br                    tier=browser  css× url_pat=''              hits=71
+  sede.agenciatributaria.gob.es       tier=browser  css× url_pat='/Sede/'        hits=57
+  folha.uol.com.br                    tier=browser  css× url_pat=''              hits=51
+  gov.uk                              tier=browser  css× url_pat=''              hits=13
+  britannica.com                      tier=browser  css× url_pat='/History-Society' hits=88
+  elpais.com                          tier=?        css× url_pat=''              hits=15
+
+Results JSON: ./test-cache-30v2/results.json

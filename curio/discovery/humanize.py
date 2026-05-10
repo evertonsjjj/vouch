@@ -32,7 +32,9 @@ def reading_pause() -> float:
     return random.uniform(*_READ_PAUSE)
 
 
-async def type_humanlike(locator: Any, text: str, *, speed: str = "natural", typo_rate: float = 0.02) -> None:
+async def type_humanlike(
+    locator: Any, text: str, *, speed: str = "natural", typo_rate: float = 0.02
+) -> None:
     """Type *text* into a Playwright locator with human-ish rhythm and occasional typos."""
     low, high = _SPEED_MS.get(speed, _SPEED_MS["natural"])
     for ch in text:

@@ -1,0 +1,4 @@
+Running 30 queries against 10 sites...
+
+[ 1] PT-TAX ✓ 43.0s chunks=3 | route=jusbrasil.com.br, sede.agenciatributaria.gob.es | first: Simuladores
+[ 2] PT-TAX ✓ 15.5s chunks=2 | route=jusbrasil.com.br, folha.uol.com.br | first: folha.uol.com.br

@@ -109,14 +109,22 @@ def test_pattern_is_cached_after_first_llm_call(tmp_path):
     )
     # First call: hits LLM (pick + selector discovery).
     extract_with_llm_fallback(
-        _HTML, source_url="https://example.com/search", site=site,
-        query="LLMs", llm=llm, cache=cache,
+        _HTML,
+        source_url="https://example.com/search",
+        site=site,
+        query="LLMs",
+        llm=llm,
+        cache=cache,
     )
     assert llm.calls == 2
     # Second call: URL-pattern cache replays without any LLM call.
     second = extract_with_llm_fallback(
-        _HTML, source_url="https://example.com/search", site=site,
-        query="LLMs", llm=llm, cache=cache,
+        _HTML,
+        source_url="https://example.com/search",
+        site=site,
+        query="LLMs",
+        llm=llm,
+        cache=cache,
     )
     assert llm.calls == 2, "second call should hit cache, not LLM"
     assert all("/models/" in c.source_url for c in second)
@@ -135,8 +143,12 @@ def test_to_chunks_invokes_llm_when_heuristic_is_weak(tmp_path):
         }
     )
     chunks = to_chunks(
-        _HTML, source_url="https://example.com/search", site=site,
-        llm=llm, query="LLMs", cache=cache,
+        _HTML,
+        source_url="https://example.com/search",
+        site=site,
+        llm=llm,
+        query="LLMs",
+        cache=cache,
     )
     assert chunks
     assert any("/models/" in c.source_url for c in chunks)
@@ -153,8 +165,12 @@ def test_bad_url_pattern_not_cached(tmp_path):
         }
     )
     extract_with_llm_fallback(
-        _HTML, source_url="https://example.com/search", site=site,
-        query="x", llm=llm, cache=cache,
+        _HTML,
+        source_url="https://example.com/search",
+        site=site,
+        query="x",
+        llm=llm,
+        cache=cache,
     )
     assert "result_url_contains" not in (cache.get("example.com") or {})
 
@@ -165,8 +181,12 @@ def test_inferred_pattern_requires_3_plus_picks(tmp_path):
     cache = SelectorCache(tmp_path / "sel.db")
     llm = _FakeLLM({"results": [{"i": 0}], "url_pattern": ""})
     extract_with_llm_fallback(
-        _HTML, source_url="https://example.com/search", site=site,
-        query="x", llm=llm, cache=cache,
+        _HTML,
+        source_url="https://example.com/search",
+        site=site,
+        query="x",
+        llm=llm,
+        cache=cache,
     )
     assert "result_url_contains" not in (cache.get("example.com") or {})
 

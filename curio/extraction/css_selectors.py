@@ -43,7 +43,7 @@ def apply_selectors(
     selectors: dict,
     *,
     source_url: str,
-    site: "Site",
+    site: Site,
     max_results: int = 10,
 ) -> list[Chunk]:
     """Replay a cached selector tuple on a fresh HTML page."""
@@ -59,7 +59,7 @@ def apply_selectors(
 
     try:
         tree = lxml_html.fromstring(html)
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         log.warning("html parse failed: %s", e)
         return []
 
@@ -108,7 +108,7 @@ def _safe_cssselect(node, selector: str | None):
         return []
     try:
         return list(node.cssselect(selector))
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         log.debug("cssselect %r failed: %s", selector, e)
         return []
 
@@ -125,7 +125,7 @@ def _text_of(node) -> str:
         return ""
     try:
         return " ".join((node.text_content() or "").split())
-    except Exception:  # noqa: BLE001
+    except Exception:
         return ""
 
 
@@ -134,7 +134,7 @@ def _attr_of(node, name: str) -> str:
         return ""
     try:
         return node.get(name) or ""
-    except Exception:  # noqa: BLE001
+    except Exception:
         return ""
 
 
@@ -143,8 +143,9 @@ def _attr_of(node, name: str) -> str:
 # ----------------------------------------------------------------------
 
 _SYS = (
-    "You receive DOM-path information about candidate search-result links and produce a "
-    "CSS selector tuple that captures every result on the page. Output strict JSON only."
+    "You are a web-scraping engineer. Given DOM context for candidate result "
+    "links you produce a CSS selector tuple that captures every card. "
+    "Output strict JSON only — no prose."
 )
 
 
@@ -152,31 +153,45 @@ _USER_TMPL = """User query: {query}
 Site: {site}
 Page URL: {page}
 
-Below are candidate result links along with their DOM context — the chain of parent
-elements (tag + main class) leading up to the link. Identify the CSS selector that
-captures *every* result card on this page (not a single one).
+You see {n_picks} link candidates that the user picked as real results.
 
-Candidates (LLM previously chose these as real results):
+For each pick I show:
+  - title:    visible text of the link
+  - href:     URL it points to
+  - dom_path: ancestor tag chain (tag.first-class), root-first
+              e.g. "html > body > main.results > article.card > h3 > a"
+  - siblings: tag.class of siblings near the link
+
+Picks (JSON):
 {candidates}
 
-Return JSON:
+Below is **one full result card's HTML** so you can see the inner structure
+(title, snippet, date, author may live as siblings or descendants of the link):
+
+```html
+{sample_card_html}
+```
+
+Return strict JSON in this exact shape:
 {{
-  "container": "<CSS selector matching one entire result card>",
-  "title":     "<selector for the title element, RELATIVE to container>",
-  "url":       "<selector for the link element, RELATIVE to container>",
-  "snippet":   "<selector for the description/excerpt, RELATIVE to container, or null>",
-  "date":      "<selector for date/time, or null>",
-  "author":    "<selector for byline/author, or null>",
-  "confidence": 0.0-1.0
+  "container": "<CSS selector that matches *every* result card on this page>",
+  "title":    "<selector for the title element, RELATIVE to container>",
+  "url":      "<selector for the <a> element holding href, RELATIVE to container>",
+  "snippet":  "<selector for description/excerpt text, or null>",
+  "date":     "<selector for date/time, or null>",
+  "author":   "<selector for byline/author, or null>",
+  "confidence": 0.0-1.0,
+  "rationale": "<one sentence>"
 }}
 
 Rules:
-- Selectors must be valid CSS3 (works in lxml.cssselect).
-- Container should match all result cards on the page — generic enough to
-  generalize. Avoid IDs (those are usually unique to one card).
+- Selectors must be valid CSS3 (lxml.cssselect supports class, id, tag, descendant, `>`, `,`).
+- Container must match every card generically — pick a class that appears on
+  multiple cards (look at dom_paths of several picks). Avoid IDs.
+- title/url/snippet/date/author are RELATIVE to container (e.g. "h3 a", not ".card h3 a").
 - Avoid `:nth-child(N)` unless absolutely required.
-- If you cannot identify a clean structural pattern, return all-null with
-  confidence 0.
+- If picks have inconsistent structure or you can't identify a repeating shape,
+  set container=null and confidence=0.
 """
 
 
@@ -184,38 +199,48 @@ def discover_selectors(
     candidates_with_dom: list[dict],
     *,
     query: str,
-    site: "Site",
+    site: Site,
     page_url: str,
-    llm: "LLMClient",
+    llm: LLMClient,
+    html: str | None = None,
 ) -> dict | None:
-    """Ask the LLM for a CSS selector tuple covering all result cards."""
+    """Ask the LLM for a CSS selector tuple covering all result cards.
+
+    If raw page ``html`` is provided, we extract one example card's outer HTML
+    (its closest ``article|li|div`` ancestor) and pass it to the LLM. That dramatically
+    improves the LLM's ability to identify the right snippet/date selectors,
+    because it sees the actual DOM structure, not just dom_path strings.
+    """
     if not candidates_with_dom:
         return None
-    # Compact serialization for tokens.
     compact = []
     for c in candidates_with_dom[:15]:
         compact.append(
             {
-                "title": c.get("title", "")[:80],
-                "url": c.get("path") or c.get("url", "")[:80],
+                "title": (c.get("title") or "")[:80],
+                "href": (c.get("url") or "")[:80],
                 "dom_path": c.get("dom_path", ""),
-                "siblings": c.get("siblings", [])[:6],
+                "siblings": list(c.get("siblings", []))[:6],
             }
         )
+
+    sample_card_html = _sample_card_html(html, candidates_with_dom)
 
     prompt = _USER_TMPL.format(
         query=query,
         site=site.url,
         page=page_url,
+        n_picks=len(candidates_with_dom),
         candidates=json.dumps(compact, ensure_ascii=False, indent=1),
+        sample_card_html=sample_card_html,
     )
     try:
         data = llm.chat_json(
             [{"role": "system", "content": _SYS}, {"role": "user", "content": prompt}],
             temperature=0.0,
-            max_tokens=500,
+            max_tokens=600,
         )
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         log.warning("CSS selector discovery LLM call failed: %s", e)
         return None
     if not isinstance(data, dict):
@@ -231,8 +256,64 @@ def discover_selectors(
         "date": data.get("date"),
         "author": data.get("author"),
         "confidence": float(data.get("confidence", 0.6) or 0.6),
+        "rationale": (data.get("rationale") or "")[:200],
     }
     return out
+
+
+_CARD_TAGS = ("article", "li", "div")
+
+
+def _sample_card_html(html: str | None, candidates: list[dict], *, max_chars: int = 1800) -> str:
+    """Return the outer HTML of one candidate's closest container, truncated."""
+    if not html:
+        return "(no html available)"
+    try:
+        from lxml import html as lxml_html
+        from lxml.etree import tostring
+    except ImportError:
+        return "(lxml unavailable)"
+
+    try:
+        tree = lxml_html.fromstring(html)
+    except Exception:
+        return "(html parse failed)"
+
+    # Find an <a> matching the first candidate's title; walk up to a card-like container.
+    target = None
+    for cand in candidates[:5]:
+        title = (cand.get("title") or "")[:80].strip()
+        if not title:
+            continue
+        for a in tree.iter("a"):
+            text = " ".join((a.text_content() or "").split())
+            if title in text or text in title:
+                target = a
+                break
+        if target is not None:
+            break
+
+    if target is None:
+        return "(no card matched)"
+
+    node = target
+    for _ in range(8):
+        parent = node.getparent() if hasattr(node, "getparent") else None
+        if parent is None:
+            break
+        if getattr(parent, "tag", "") in _CARD_TAGS and (parent.get("class") or ""):
+            node = parent
+            break
+        node = parent
+
+    try:
+        raw = tostring(node, encoding="unicode", pretty_print=False)
+    except Exception:
+        return "(tostring failed)"
+    raw = " ".join(raw.split())  # collapse whitespace
+    if len(raw) > max_chars:
+        raw = raw[:max_chars] + " ...(truncated)"
+    return raw
 
 
 # ----------------------------------------------------------------------
@@ -240,7 +321,7 @@ def discover_selectors(
 # ----------------------------------------------------------------------
 
 
-def selectors_validate(html: str, selectors: dict, *, source_url: str, site: "Site") -> bool:
+def selectors_validate(html: str, selectors: dict, *, source_url: str, site: Site) -> bool:
     """Apply selectors; consider valid if we can extract 2+ chunks with non-empty titles."""
     chunks = apply_selectors(html, selectors, source_url=source_url, site=site, max_results=10)
     if len(chunks) < 2:
@@ -253,26 +334,26 @@ def selectors_validate(html: str, selectors: dict, *, source_url: str, site: "Si
 # ----------------------------------------------------------------------
 
 
-def get_cached(cache: "SelectorCache | None", domain: str) -> dict | None:
+def get_cached(cache: SelectorCache | None, domain: str) -> dict | None:
     if not cache:
         return None
     try:
         existing = cache.get(domain) or {}
-    except Exception:  # noqa: BLE001
+    except Exception:
         return None
     sel = existing.get("result_selectors")
     return sel if isinstance(sel, dict) else None
 
 
-def store(cache: "SelectorCache", domain: str, selectors: dict) -> None:
+def store(cache: SelectorCache, domain: str, selectors: dict) -> None:
     try:
         existing = cache.get(domain) or {}
-    except Exception:  # noqa: BLE001
+    except Exception:
         existing = {}
     existing["result_selectors"] = selectors
     try:
         cache.set(domain, existing)
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         log.warning("could not persist css selectors for %s: %s", domain, e)
 
 

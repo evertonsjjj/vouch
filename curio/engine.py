@@ -14,12 +14,12 @@ from typing import Any
 
 from ._llm import LLMClient
 from .adapters import build_adapter
-from .adapters.base import AdapterContext, SiteAdapter
+from .adapters.base import AdapterContext
 from .catalog import Catalog, Site
 from .config import EngineConfig
 from .discovery.cache import SelectorCache
 from .exceptions import AdapterError, BlockedError
-from .models import CacheStats, Chunk, RouteDecision, SearchResult, TokenUsage
+from .models import CacheStats, Chunk, RouteDecision, SearchResult
 from .router import build_router
 from .router.base import Router, RoutingContext
 
@@ -63,6 +63,8 @@ class SearchEngine:
         # Resilience
         auto_resolve_dns: bool = False,
         auto_escalate_adapter: bool = True,
+        auto_probe_on_add: bool = False,
+        probe_queries: int = 1,
         # Misc
         verbose: bool = False,
         request_timeout: float = 30.0,
@@ -93,6 +95,8 @@ class SearchEngine:
             captcha_max_attempts=captcha_max_attempts,
             auto_resolve_dns=auto_resolve_dns,
             auto_escalate_adapter=auto_escalate_adapter,
+            auto_probe_on_add=auto_probe_on_add,
+            probe_queries=probe_queries,
             verbose=verbose,
             request_timeout=request_timeout,
         )
@@ -126,8 +130,29 @@ class SearchEngine:
     # Catalog convenience
     # ------------------------------------------------------------------
 
-    def add(self, site: Site, *, replace: bool = False) -> Site:
-        return self.catalog.add(site, replace=replace, resolve_dns=self.config.auto_resolve_dns)
+    def add(
+        self,
+        site: Site,
+        *,
+        replace: bool = False,
+        probe: bool | None = None,
+    ) -> Site:
+        """Add a Site to the catalog. Optionally runs a probe crawl first.
+
+        ``probe`` defaults to ``EngineConfig.auto_probe_on_add``. Pass ``probe=True``
+        to force, or ``probe=False`` to skip even if auto-probe is enabled.
+        """
+        site = self.catalog.add(site, replace=replace, resolve_dns=self.config.auto_resolve_dns)
+        run_probe = self.config.auto_probe_on_add if probe is None else probe
+        if run_probe:
+            try:
+                from .discovery.probe import probe_site
+
+                summary = probe_site(site, self, max_probes=self.config.probe_queries)
+                log.info("Probe summary for %s: %s", site.url, summary)
+            except Exception as e:
+                log.warning("Probe crawl for %s raised: %s", site.url, e)
+        return site
 
     def remove(self, url: str) -> bool:
         return self.catalog.remove(url)
@@ -143,7 +168,7 @@ class SearchEngine:
     # ------------------------------------------------------------------
 
     @classmethod
-    def from_yaml(cls, path: str | Path, **overrides) -> "SearchEngine":
+    def from_yaml(cls, path: str | Path, **overrides) -> SearchEngine:
         import yaml
 
         data = yaml.safe_load(Path(path).read_text(encoding="utf-8")) or {}
@@ -157,6 +182,17 @@ class SearchEngine:
     # ------------------------------------------------------------------
     # Search
     # ------------------------------------------------------------------
+
+    async def asearch(self, query: str, **kwargs) -> SearchResult:
+        """Async wrapper around :meth:`search` — runs the sync engine in a thread.
+
+        Use this from inside agent frameworks that require an async tool::
+
+            result = await engine.asearch("LLM benchmarks", depth=1)
+        """
+        import asyncio
+
+        return await asyncio.to_thread(self.search, query, **kwargs)
 
     def search(
         self,
@@ -210,7 +246,7 @@ class SearchEngine:
                 except AdapterError as e:
                     errors.append(f"{site.url}: {e}")
                     log.warning("Site %s failed: %s", site.url, e)
-                except Exception as e:  # noqa: BLE001
+                except Exception as e:
                     errors.append(f"{site.url}: unexpected {type(e).__name__}: {e}")
                     log.exception("Site %s raised", site.url)
 
@@ -218,8 +254,35 @@ class SearchEngine:
         chunks = _dedup(chunks)
         chunks = _rerank(chunks, query)[:max_results]
 
-        tokens = self._llm.tokens.add(self._router_llm.tokens) if self._router_llm is not self._llm else self._llm.tokens
-        cost = self._llm.cost_usd + (self._router_llm.cost_usd if self._router_llm is not self._llm else 0.0)
+        tokens = (
+            self._llm.tokens.add(self._router_llm.tokens)
+            if self._router_llm is not self._llm
+            else self._llm.tokens
+        )
+        cost = self._llm.cost_usd + (
+            self._router_llm.cost_usd if self._router_llm is not self._llm else 0.0
+        )
+
+        # Quality assessment of the final chunk set.
+        from .extraction.llm_extract import looks_low_quality
+
+        quality_warning = None
+        if chunks and looks_low_quality(chunks):
+            quality_warning = (
+                "Heuristic + LLM extraction returned chunks that look like nav/category links "
+                "rather than real results. The site likely renders results via JavaScript or "
+                "blocks scraping. Consider providing a `search_url_template` or installing the "
+                "stealth extras: `pip install 'curio[browser,stealth]'`."
+            )
+
+        if errors and chunks:
+            status = "low_quality" if quality_warning else "partial"
+        elif errors and not chunks:
+            status = "blocked"
+        elif quality_warning:
+            status = "low_quality"
+        else:
+            status = "ok"
 
         result = SearchResult(
             query=query,
@@ -230,8 +293,9 @@ class SearchEngine:
             cost_estimate_usd=round(cost, 6),
             tokens_used=tokens,
             cache_stats=cache,
-            status="partial" if errors and chunks else ("blocked" if errors and not chunks else "ok"),
+            status=status,
             errors=errors,
+            quality_warning=quality_warning,
         )
         return result
 
@@ -306,7 +370,9 @@ class SearchEngine:
         cache_hit = self.selector_cache.get(site.url) is not None
 
         if not self.config.auto_escalate_adapter:
-            return self._run_with_adapter(site, query, depth, max_results, timeout, tier=None), cache_hit
+            return self._run_with_adapter(
+                site, query, depth, max_results, timeout, tier=None
+            ), cache_hit
 
         ladder = self._adapter_ladder(site)
         last_error: Exception | None = None
@@ -314,9 +380,7 @@ class SearchEngine:
         best_tier: str | None = None
         for tier in ladder:
             try:
-                chunks = self._run_with_adapter(
-                    site, query, depth, max_results, timeout, tier=tier
-                )
+                chunks = self._run_with_adapter(site, query, depth, max_results, timeout, tier=tier)
             except (BlockedError, AdapterError) as e:
                 log.info("Tier %s failed for %s: %s — escalating", tier, site.url, e)
                 last_error = e
@@ -333,7 +397,12 @@ class SearchEngine:
                 return chunks, cache_hit
             # Low-quality — keep latest as fallback (higher tiers tend to render
             # closer to what a real user sees) and try the next tier.
-            log.info("Tier %s returned %d low-quality chunks for %s — escalating", tier, len(chunks), site.url)
+            log.info(
+                "Tier %s returned %d low-quality chunks for %s — escalating",
+                tier,
+                len(chunks),
+                site.url,
+            )
             best_chunks = chunks
             best_tier = tier
             self._record_tier_failure(site.url, tier)
@@ -370,19 +439,19 @@ class SearchEngine:
             if site.pre_search:
                 try:
                     site.pre_search(ctx)
-                except Exception as e:  # noqa: BLE001
+                except Exception as e:
                     log.warning("pre_search hook for %s raised: %s", site.url, e)
             chunks = adapter.search(ctx)
             if site.post_extract:
                 try:
                     chunks = list(site.post_extract(chunks)) or chunks
-                except Exception as e:  # noqa: BLE001
+                except Exception as e:
                     log.warning("post_extract hook for %s raised: %s", site.url, e)
             return chunks
         finally:
             try:
                 adapter.close()
-            except Exception:  # noqa: BLE001
+            except Exception:
                 pass
 
     # ------------------------------------------------------------------
@@ -420,7 +489,7 @@ class SearchEngine:
         cached["failed_tiers"] = sorted(failed)
         try:
             self.selector_cache.set(domain, cached)
-        except Exception:  # noqa: BLE001
+        except Exception:
             pass
 
     def _record_tier_success(self, domain: str, tier: str) -> None:
@@ -435,7 +504,7 @@ class SearchEngine:
             cached.pop("failed_tiers")
         try:
             self.selector_cache.set(domain, cached)
-        except Exception:  # noqa: BLE001
+        except Exception:
             pass
 
     def _adapter_for_tier(self, site: Site, tier: str | None):
@@ -484,9 +553,7 @@ class SearchEngine:
                         config=self.config, llm=self._llm, selector_cache=self.selector_cache
                     )
         # unknown tier: default
-        return build_adapter(
-            site, self.config, llm=self._llm, selector_cache=self.selector_cache
-        )
+        return build_adapter(site, self.config, llm=self._llm, selector_cache=self.selector_cache)
 
 
 # ----------------------------------------------------------------------
@@ -548,6 +615,6 @@ def search(
         site_obj = s if isinstance(s, Site) else Site(url=s)
         try:
             engine.catalog.add(site_obj, replace=True)
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             log.warning("could not add %s: %s", site_obj, e)
     return engine.search(query, depth=depth, max_results=max_results, timeout=timeout)

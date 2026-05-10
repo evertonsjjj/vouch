@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import logging
 import socket
-from typing import Iterable
+from collections.abc import Iterable
 
 import httpx
 
@@ -78,7 +78,7 @@ def _http_ok(host: str, *, timeout: float = 6.0) -> bool:
                 # Servers that reject HEAD; try GET on root.
                 r = client.get(f"https://{host}", timeout=timeout)
             return r.status_code < 500 and r.status_code != 404
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         log.debug("HTTP probe %s failed: %s", host, e)
         return False
 

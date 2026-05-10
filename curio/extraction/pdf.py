@@ -12,7 +12,9 @@ def extract_pdf_text(data: bytes | str | Path) -> str:
     try:
         from pypdf import PdfReader  # type: ignore
     except ImportError as e:
-        raise ExtractionError("PDF extraction requires pypdf. Install with: pip install 'curio[pdf]'") from e
+        raise ExtractionError(
+            "PDF extraction requires pypdf. Install with: pip install 'curio[pdf]'"
+        ) from e
 
     if isinstance(data, (str, Path)):
         reader = PdfReader(str(data))
@@ -22,7 +24,7 @@ def extract_pdf_text(data: bytes | str | Path) -> str:
     for page in reader.pages:
         try:
             chunks.append(page.extract_text() or "")
-        except Exception:  # noqa: BLE001
+        except Exception:
             continue
     return "\n\n".join(c for c in chunks if c).strip()
 

@@ -5,8 +5,9 @@ from __future__ import annotations
 import hashlib
 import logging
 import re
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any
 
 from ..models import SearchResult
 from .notify import Notifier
@@ -41,7 +42,7 @@ class Watch:
 class Monitor:
     """APScheduler-based periodic searcher."""
 
-    def __init__(self, engine: "SearchEngine"):
+    def __init__(self, engine: SearchEngine):
         self.engine = engine
         self.watches: list[Watch] = []
         self._scheduler: Any = None
@@ -103,7 +104,7 @@ class Monitor:
     def _run_one(self, w: Watch) -> None:
         try:
             result = self.engine.search(w.query, sites=[w.site])
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             log.exception("watch %s/%s failed: %s", w.site, w.query, e)
             return
 
@@ -120,7 +121,7 @@ class Monitor:
         if w.callback:
             try:
                 w.callback(result)
-            except Exception as e:  # noqa: BLE001
+            except Exception as e:
                 log.warning("watch callback raised: %s", e)
         w.last_hash = digest
 

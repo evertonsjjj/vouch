@@ -2,12 +2,11 @@
 
 from __future__ import annotations
 
-from typing import Any
 from unittest.mock import patch
 
 import pytest
 
-from curio import Chunk, SearchEngine, Site
+from curio import Chunk, SearchEngine
 from curio.adapters.base import AdapterContext, SiteAdapter
 
 

@@ -29,11 +29,7 @@ def extract_structured(
     Returns a populated instance of the Pydantic model, or raises ValidationError.
     """
     schema_json = json.dumps(schema.model_json_schema(), ensure_ascii=False)
-    prompt = (
-        f"{instructions}\n\n"
-        f"JSON schema:\n{schema_json}\n\n"
-        f"Source content:\n{text[:8000]}"
-    )
+    prompt = f"{instructions}\n\nJSON schema:\n{schema_json}\n\nSource content:\n{text[:8000]}"
     data = llm.chat_json(
         [{"role": "system", "content": _SYS}, {"role": "user", "content": prompt}],
         temperature=0.0,

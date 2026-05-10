@@ -1,0 +1,302 @@
+[
+  {
+    "i": 1,
+    "label": "PT-TAX",
+    "query": "imposto de renda pessoa física 2026 declaração",
+    "routed": "jusbrasil.com.br, sede.agenciatributaria",
+    "chunks": 3,
+    "status": "ok",
+    "secs": 43.1,
+    "first": "Simuladores"
+  },
+  {
+    "i": 2,
+    "label": "PT-TAX",
+    "query": "tabela ISS São Paulo serviços alíquota",
+    "routed": "jusbrasil.com.br, folha.uol.com.br",
+    "chunks": 2,
+    "status": "ok",
+    "secs": 15.5,
+    "first": "folha.uol.com.br"
+  },
+  {
+    "i": 3,
+    "label": "PT-TAX",
+    "query": "ICMS tributação interestadual diferencial",
+    "routed": "jusbrasil.com.br, sede.agenciatributaria",
+    "chunks": 3,
+    "status": "ok",
+    "secs": 21.0,
+    "first": "Suscripción newsletter"
+  },
+  {
+    "i": 4,
+    "label": "PT-TAX",
+    "query": "MEI faturamento limite anual 2026",
+    "routed": "jusbrasil.com.br, sede.agenciatributaria",
+    "chunks": 3,
+    "status": "ok",
+    "secs": 22.6,
+    "first": "Suscripción newsletter"
+  },
+  {
+    "i": 5,
+    "label": "PT-TAX",
+    "query": "Simples Nacional anexo III alíquota",
+    "routed": "jusbrasil.com.br, sede.agenciatributaria",
+    "chunks": 3,
+    "status": "ok",
+    "secs": 21.8,
+    "first": "Suscripción newsletter"
+  },
+  {
+    "i": 6,
+    "label": "EN-TAX",
+    "query": "IRS form 1040 individual income tax",
+    "routed": "jusbrasil.com.br, sede.agenciatributaria",
+    "chunks": 3,
+    "status": "ok",
+    "secs": 21.3,
+    "first": "Suscripción newsletter"
+  },
+  {
+    "i": 7,
+    "label": "EN-TAX",
+    "query": "capital gains tax US 2026 long term",
+    "routed": "jusbrasil.com.br, gov.uk",
+    "chunks": 3,
+    "status": "ok",
+    "secs": 17.5,
+    "first": "Benefits"
+  },
+  {
+    "i": 8,
+    "label": "EN-TAX",
+    "query": "tax deduction self employed home office",
+    "routed": "jusbrasil.com.br, sede.agenciatributaria",
+    "chunks": 3,
+    "status": "ok",
+    "secs": 22.4,
+    "first": "Suscripción newsletter"
+  },
+  {
+    "i": 9,
+    "label": "EN-TAX",
+    "query": "estimated quarterly tax payment IRS",
+    "routed": "gov.uk, jusbrasil.com.br",
+    "chunks": 3,
+    "status": "ok",
+    "secs": 17.1,
+    "first": "Benefits"
+  },
+  {
+    "i": 10,
+    "label": "EN-TAX",
+    "query": "401k contribution limit 2026",
+    "routed": "gov.uk, britannica.com",
+    "chunks": 3,
+    "status": "ok",
+    "secs": 20.1,
+    "first": "Profit-Sharing Plan"
+  },
+  {
+    "i": 11,
+    "label": "ES-TAX",
+    "query": "declaración renta IRPF 2026 España",
+    "routed": "sede.agenciatributaria.gob.es, jusbrasil",
+    "chunks": 3,
+    "status": "ok",
+    "secs": 21.6,
+    "first": "Suscripción newsletter"
+  },
+  {
+    "i": 12,
+    "label": "ES-TAX",
+    "query": "modelo 303 IVA trimestral autónomo",
+    "routed": "sede.agenciatributaria.gob.es, jusbrasil",
+    "chunks": 3,
+    "status": "ok",
+    "secs": 21.8,
+    "first": "Suscripción newsletter"
+  },
+  {
+    "i": 13,
+    "label": "ES-TAX",
+    "query": "autónomo cuota Seguridad Social tarifa plana",
+    "routed": "sede.agenciatributaria.gob.es, jusbrasil",
+    "chunks": 3,
+    "status": "ok",
+    "secs": 21.7,
+    "first": "Suscripción newsletter"
+  },
+  {
+    "i": 14,
+    "label": "ES-TAX",
+    "query": "tributación criptomonedas España 2026",
+    "routed": "sede.agenciatributaria.gob.es, jusbrasil",
+    "chunks": 3,
+    "status": "ok",
+    "secs": 22.6,
+    "first": "Suscripción newsletter"
+  },
+  {
+    "i": 15,
+    "label": "ES-TAX",
+    "query": "deducción vivienda habitual hipoteca",
+    "routed": "jusbrasil.com.br, sede.agenciatributaria",
+    "chunks": 3,
+    "status": "ok",
+    "secs": 22.5,
+    "first": "Suscripción newsletter"
+  },
+  {
+    "i": 16,
+    "label": "PT-GEN",
+    "query": "história da República Velha Brasil",
+    "routed": "britannica.com, folha.uol.com.br",
+    "chunks": 3,
+    "status": "ok",
+    "secs": 39.2,
+    "first": "History & Society"
+  },
+  {
+    "i": 17,
+    "label": "PT-GEN",
+    "query": "biografia Machado de Assis escritor",
+    "routed": "britannica.com, folha.uol.com.br",
+    "chunks": 2,
+    "status": "ok",
+    "secs": 19.6,
+    "first": "History & Society"
+  },
+  {
+    "i": 18,
+    "label": "PT-GEN",
+    "query": "fórmula química água oxigenada uso",
+    "routed": "britannica.com, elpais.com",
+    "chunks": 1,
+    "status": "partial",
+    "secs": 19.1,
+    "first": "History & Society"
+  },
+  {
+    "i": 19,
+    "label": "PT-GEN",
+    "query": "como fazer feijoada tradicional receita",
+    "routed": "britannica.com, folha.uol.com.br",
+    "chunks": 2,
+    "status": "ok",
+    "secs": 19.3,
+    "first": "History & Society"
+  },
+  {
+    "i": 20,
+    "label": "PT-GEN",
+    "query": "treino academia hipertrofia muscular iniciante",
+    "routed": "britannica.com, folha.uol.com.br",
+    "chunks": 2,
+    "status": "ok",
+    "secs": 16.0,
+    "first": "History & Society"
+  },
+  {
+    "i": 21,
+    "label": "EN-GEN",
+    "query": "history of the Roman Empire fall",
+    "routed": "britannica.com, elpais.com",
+    "chunks": 1,
+    "status": "partial",
+    "secs": 19.4,
+    "first": "History & Society"
+  },
+  {
+    "i": 22,
+    "label": "EN-GEN",
+    "query": "Shakespeare Hamlet analysis themes",
+    "routed": "britannica.com, folha.uol.com.br",
+    "chunks": 3,
+    "status": "ok",
+    "secs": 21.3,
+    "first": "Tragedy - Asian Drama, Absence, Elements"
+  },
+  {
+    "i": 23,
+    "label": "EN-GEN",
+    "query": "DNA replication process biology",
+    "routed": "britannica.com",
+    "chunks": 3,
+    "status": "ok",
+    "secs": 22.6,
+    "first": "Semiconservative DNA replication (genetics)"
+  },
+  {
+    "i": 24,
+    "label": "EN-GEN",
+    "query": "Italian carbonara recipe traditional",
+    "routed": "britannica.com, elpais.com",
+    "chunks": 1,
+    "status": "partial",
+    "secs": 20.6,
+    "first": "History & Society"
+  },
+  {
+    "i": 25,
+    "label": "EN-GEN",
+    "query": "HIIT cardio workout routine beginner",
+    "routed": "britannica.com, folha.uol.com.br",
+    "chunks": 2,
+    "status": "ok",
+    "secs": 22.1,
+    "first": "History & Society"
+  },
+  {
+    "i": 26,
+    "label": "ES-GEN",
+    "query": "historia España Reconquista cronología",
+    "routed": "britannica.com, elpais.com",
+    "chunks": 1,
+    "status": "partial",
+    "secs": 20.2,
+    "first": "History & Society"
+  },
+  {
+    "i": 27,
+    "label": "ES-GEN",
+    "query": "Gabriel García Márquez novelas Cien Años",
+    "routed": "britannica.com, folha.uol.com.br",
+    "chunks": 2,
+    "status": "ok",
+    "secs": 20.3,
+    "first": "History & Society"
+  },
+  {
+    "i": 28,
+    "label": "ES-GEN",
+    "query": "ADN replicación proceso biología molecular",
+    "routed": "britannica.com",
+    "chunks": 1,
+    "status": "ok",
+    "secs": 20.3,
+    "first": "History & Society"
+  },
+  {
+    "i": 29,
+    "label": "ES-GEN",
+    "query": "paella valenciana receta tradicional",
+    "routed": "britannica.com, folha.uol.com.br",
+    "chunks": 2,
+    "status": "ok",
+    "secs": 20.7,
+    "first": "History & Society"
+  },
+  {
+    "i": 30,
+    "label": "ES-GEN",
+    "query": "rutina entrenamiento gimnasio fuerza principiant",
+    "routed": "britannica.com, folha.uol.com.br",
+    "chunks": 2,
+    "status": "ok",
+    "secs": 21.9,
+    "first": "History & Society"
+  }
+]

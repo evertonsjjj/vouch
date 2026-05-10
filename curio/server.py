@@ -13,9 +13,7 @@ try:
     from fastapi.responses import HTMLResponse
     from pydantic import BaseModel
 except ImportError as e:  # pragma: no cover
-    raise ImportError(
-        "Dashboard requires extras: pip install 'curio[server]'"
-    ) from e
+    raise ImportError("Dashboard requires extras: pip install 'curio[server]'") from e
 
 
 _INDEX_HTML = """<!doctype html>
