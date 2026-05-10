@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from curio.models import Chunk, SearchResult, TokenUsage
+from farol.models import Chunk, SearchResult, TokenUsage
 
 
 def test_token_addition():

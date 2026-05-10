@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from curio.dns_resolver import _candidate_hosts, resolve_canonical_host
+from farol.dns_resolver import _candidate_hosts, resolve_canonical_host
 
 
 def test_candidate_list_for_es_domain():
@@ -27,7 +27,7 @@ def test_candidate_strips_www_prefix():
 
 def test_resolve_falls_back_to_input_on_failure(monkeypatch):
     """When nothing resolves, return the original domain so caller fails clean."""
-    from curio import dns_resolver
+    from farol import dns_resolver
 
     monkeypatch.setattr(dns_resolver, "_dns_resolves", lambda *_: False)
     monkeypatch.setattr(dns_resolver, "_http_ok", lambda *_, **__: False)

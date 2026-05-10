@@ -9,10 +9,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from curio import Site
-from curio.discovery.cache import SelectorCache
-from curio.extraction import css_selectors as css
-from curio.extraction.trafilatura import to_chunks
+from farol import Site
+from farol.discovery.cache import SelectorCache
+from farol.extraction import css_selectors as css
+from farol.extraction.trafilatura import to_chunks
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -68,7 +68,7 @@ def test_validate_succeeds_for_arxiv_with_pinned_selectors():
 
 def test_cache_replay_skips_llm_when_selectors_present(tmp_path):
     """Once CSS selectors are stored, the next extract_with_llm_fallback call uses them."""
-    from curio.extraction.llm_extract import extract_with_llm_fallback
+    from farol.extraction.llm_extract import extract_with_llm_fallback
 
     class _ShouldNotBeCalledLLM:
         tokens = type("T", (), {"input": 0, "output": 0})()

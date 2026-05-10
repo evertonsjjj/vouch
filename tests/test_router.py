@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from curio.router import AllRouter, TagRouter, build_router
-from curio.router.base import RoutingContext
+from farol.router import AllRouter, TagRouter, build_router
+from farol.router.base import RoutingContext
 
 
 def test_all_router_returns_everything(sample_sites):

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 
-from curio.models import Chunk, SearchResult
+from farol.models import Chunk, SearchResult
 
 
 def _result() -> SearchResult:

@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from curio import Site
-from curio.discovery.cache import SelectorCache
-from curio.extraction import css_selectors as css
+from farol import Site
+from farol.discovery.cache import SelectorCache
+from farol.extraction import css_selectors as css
 
 _HTML = """
 <html><body>

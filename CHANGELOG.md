@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to **curio** are documented here.
+All notable changes to **farol** are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 this project follows [Semantic Versioning](https://semver.org/).
@@ -30,11 +30,11 @@ this project follows [Semantic Versioning](https://semver.org/).
 - **Probe crawl on add()** — opt-in `auto_probe_on_add=True` runs a tiny
   probe query the moment a site is added so the engine learns its
   working_tier and selectors before any real user query.
-- **Profile registry** — bundled `curio/profiles/builtin.yaml` ships with
+- **Profile registry** — bundled `farol/profiles/builtin.yaml` ships with
   curated profiles for 24 popular sites (arxiv, github, huggingface, pypi,
   npmjs, crates, MDN, Wikipedia ×3, gov.uk, irs.gov, sede.agenciatributaria,
   jusbrasil, planalto, BBC, Folha, El País, Stack Overflow, Reddit, …).
-  New CLI commands: `curio profiles list/show/import`.
+  New CLI commands: `farol profiles list/show/import`.
 - **Accept-Language header** — query language detected (PT/ES/EN/FR/IT/DE)
   and matching `Accept-Language` is sent on HTTP fetches. Reduces redirects
   to wrong-language site versions.
@@ -86,5 +86,5 @@ this project follows [Semantic Versioning](https://semver.org/).
 - CrewAI / LangChain / PydanticAI / MCP integrations.
 - Optional vision-LLM CAPTCHA solver, APScheduler change monitor.
 
-[0.2.0]: https://github.com/yourhandle/curio/releases/tag/v0.2.0
-[0.1.0]: https://github.com/yourhandle/curio/releases/tag/v0.1.0
+[0.2.0]: https://github.com/yourhandle/farol/releases/tag/v0.2.0
+[0.1.0]: https://github.com/yourhandle/farol/releases/tag/v0.1.0

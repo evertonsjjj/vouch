@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from curio import Catalog, SearchEngine, Site
+from farol import Catalog, SearchEngine, Site
 
 
 @pytest.fixture

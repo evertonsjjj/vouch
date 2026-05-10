@@ -1,12 +1,12 @@
-# Contributing to curio
+# Contributing to farol
 
-Thanks for considering a contribution. curio is an early-stage project — issues, PRs, and ideas are all welcome.
+Thanks for considering a contribution. farol is an early-stage project — issues, PRs, and ideas are all welcome.
 
 ## Development setup
 
 ```bash
-git clone https://github.com/yourhandle/curio
-cd curio
+git clone https://github.com/yourhandle/farol
+cd farol
 python -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -e ".[dev,all]"

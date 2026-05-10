@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from curio.extraction.llm_extract import looks_low_quality
-from curio.models import Chunk
+from farol.extraction.llm_extract import looks_low_quality
+from farol.models import Chunk
 
 
 def _chunk(url: str, title: str = "Pretty long real result title") -> Chunk:

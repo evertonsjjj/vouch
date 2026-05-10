@@ -16,7 +16,7 @@ import time
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", line_buffering=True)
 
-from curio import SearchEngine, Site
+from farol import SearchEngine, Site
 
 # Sites that previously returned junk titles like "Pricing" / "Advertise with us".
 SITES = [
@@ -85,7 +85,7 @@ def _strip_llm_from_adapter(engine: SearchEngine):
 
     This forces heuristic-only extraction without breaking the engine itself.
     """
-    import curio.engine as eng_mod
+    import farol.engine as eng_mod
 
     orig = eng_mod.build_adapter
 
@@ -97,7 +97,7 @@ def _strip_llm_from_adapter(engine: SearchEngine):
 
 
 def _restore(engine: SearchEngine, orig):
-    import curio.engine as eng_mod
+    import farol.engine as eng_mod
 
     eng_mod.build_adapter = orig
 

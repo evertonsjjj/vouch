@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from curio._lang import accept_language_for, detect_language
+from farol._lang import accept_language_for, detect_language
 
 
 def test_pt_diacritics():

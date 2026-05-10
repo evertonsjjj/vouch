@@ -11,7 +11,7 @@ A clear and concise description.
 **Reproducer**
 
 ```python
-from curio import SearchEngine, Site
+from farol import SearchEngine, Site
 engine = SearchEngine(llm="ollama/qwen2.5:7b")
 engine.add(Site("..."))
 result = engine.search("...")
@@ -26,7 +26,7 @@ result = engine.search("...")
 
 - OS: <Windows / macOS / Linux>
 - Python: <output of `python --version`>
-- curio: <output of `curio --version`>
+- farol: <output of `farol --version`>
 - Extras installed: <`browser`, `stealth`, `monitor`, etc.>
 
 **Logs / traceback**

@@ -6,8 +6,8 @@ from unittest.mock import patch
 
 import pytest
 
-from curio import Chunk, SearchEngine
-from curio.adapters.base import AdapterContext, SiteAdapter
+from farol import Chunk, SearchEngine
+from farol.adapters.base import AdapterContext, SiteAdapter
 
 
 class _StubAdapter(SiteAdapter):
@@ -43,7 +43,7 @@ def stub_engine(tmp_path, populated_catalog) -> SearchEngine:
 
 
 def test_search_uses_stub(stub_engine):
-    with patch("curio.engine.build_adapter", lambda *a, **kw: _StubAdapter()):
+    with patch("farol.engine.build_adapter", lambda *a, **kw: _StubAdapter()):
         result = stub_engine.search("example query", depth=1, max_results=10)
     assert len(result.chunks) > 0
     assert result.status in ("ok", "partial")
@@ -51,13 +51,13 @@ def test_search_uses_stub(stub_engine):
 
 
 def test_router_decisions_present(stub_engine):
-    with patch("curio.engine.build_adapter", lambda *a, **kw: _StubAdapter()):
+    with patch("farol.engine.build_adapter", lambda *a, **kw: _StubAdapter()):
         result = stub_engine.search("test", depth=0, max_results=5)
     assert len(result.routing_decisions) > 0
 
 
 def test_search_with_explicit_sites(stub_engine):
-    with patch("curio.engine.build_adapter", lambda *a, **kw: _StubAdapter()):
+    with patch("farol.engine.build_adapter", lambda *a, **kw: _StubAdapter()):
         result = stub_engine.search("query", sites=["arxiv.org"], depth=1)
     assert all("arxiv.org" in c.site for c in result.chunks)
 
@@ -69,7 +69,7 @@ def test_failure_in_one_site_does_not_fail_all(stub_engine):
                 raise RuntimeError("simulated")
             return super().search(ctx)
 
-    with patch("curio.engine.build_adapter", lambda *a, **kw: _SometimesFail()):
+    with patch("farol.engine.build_adapter", lambda *a, **kw: _SometimesFail()):
         result = stub_engine.search("test", depth=1)
     assert any("arxiv.org" in e for e in result.errors)
     assert result.chunks  # other sites still produced results

@@ -2,11 +2,11 @@
 
 ## Reporting a vulnerability
 
-If you discover a security vulnerability in curio, please **do not open a
+If you discover a security vulnerability in farol, please **do not open a
 public issue**. Instead, email the maintainer at the address listed on the
 package's PyPI page, or open a private security advisory on GitHub:
 
-  https://github.com/yourhandle/curio/security/advisories/new
+  https://github.com/yourhandle/farol/security/advisories/new
 
 Please include:
 

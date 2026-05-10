@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from curio import Site
-from curio.extraction.trafilatura import to_chunks
+from farol import Site
+from farol.extraction.trafilatura import to_chunks
 
 _SAMPLE = """
 <html><body>
