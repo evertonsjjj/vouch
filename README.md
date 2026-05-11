@@ -201,7 +201,7 @@ engine.add(Site("news.ycombinator.com"))
 results = engine.search("transformer architectures", depth=2)
 ```
 
-The catalog persists in SQLite (`~/.vouch/catalog.db`). You can `engine.list()`, `engine.remove("arxiv.org")`, `engine.update("arxiv.org", tags=[...])`.
+The catalog persists in SQLite (`~/.vouch/catalog.db`). You can `engine.list_sites()`, `engine.remove("arxiv.org")`, `engine.update("arxiv.org", tags=[...])`. (`engine.list()` still works as a deprecated alias through v0.x.)
 
 ### Level 3 — YAML-declared catalog
 
@@ -794,34 +794,55 @@ Chunk(
 vouch/
 ├── __init__.py            # public API: search, SearchEngine, Site
 ├── engine.py              # SearchEngine orchestrator
-├── catalog.py             # Site model, Catalog (SQLite)
+├── catalog.py             # Catalog (SQLite-backed Site registry)
+├── models.py              # Site, Chunk, SearchResult, RouteDecision
+├── config.py              # SearchEngine config dataclass
+├── exceptions.py          # VouchError + back-compat CurioError alias
+├── dns_resolver.py        # auto-fixes wrong-host catalog entries
+├── plugins.py             # entry_points-based plugin discovery
+├── cli.py                 # typer-based CLI (vouch ...)
+├── server.py              # optional: FastAPI dashboard
+├── _lang.py               # language detection helpers
+├── _llm.py                # LiteLLM wrapper (sync + async)
 ├── router/
 │   ├── base.py            # Router Protocol
-│   ├── llm_router.py      # LLM-based routing
-│   ├── embedding_router.py
-│   └── tag_router.py
+│   ├── llm_router.py      # LLM-based routing (default)
+│   ├── embedding_router.py# cosine-similarity routing
+│   ├── tag_router.py      # tag-match routing
+│   └── all_router.py      # "search every site" fallback
 ├── adapters/
 │   ├── base.py            # SiteAdapter Protocol
 │   ├── http.py            # depth=0, fast HTTP+Trafilatura
 │   ├── browser.py         # depth=1+, Playwright
+│   ├── browser_pool.py    # shared Chromium pool across searches
 │   └── stealth.py         # patchright wrapper
 ├── discovery/
 │   ├── search_bar.py      # LLM-powered selector discovery
 │   ├── cache.py           # SQLite selector cache
-│   └── humanize.py        # human-like behavior
+│   ├── humanize.py        # lognormal pauses, typing, business hours
+│   └── probe.py           # opt-in profile probe on add()
 ├── extraction/
 │   ├── trafilatura.py     # HTML → markdown
-│   ├── pdf.py             # PDF handling
-│   └── llm.py             # structured extraction via Pydantic
-├── captcha/               # optional: vision_llm CAPTCHA assist
-├── monitor/               # optional: change tracking
+│   ├── pdf.py             # PDF handling (pypdf)
+│   ├── llm.py             # structured extraction via Pydantic
+│   ├── llm_extract.py     # quality detector + LLM-driven extraction
+│   └── css_selectors.py   # cached-selector replay (lxml.cssselect)
+├── captcha/               # optional: Tesseract OCR + vision_llm CAPTCHA
+│   ├── solver.py
+│   └── tesseract.py
+├── monitor/               # optional: change tracking + notifications
+│   ├── watcher.py
+│   └── notify.py
+├── profiles/              # 24 curated site profiles + registry
+│   ├── registry.py
+│   ├── update.py
+│   └── builtin.yaml
 ├── integrations/
-│   ├── crewai.py
-│   ├── langchain.py
-│   ├── pydantic_ai.py
-│   └── mcp.py
-├── cli.py                 # typer-based CLI
-└── server.py              # optional: FastAPI dashboard
+│   ├── _common.py
+│   ├── crewai.py          # VouchSearchTool (CrewAI)
+│   ├── langchain.py       # VouchSearchTool (LangChain)
+│   ├── pydantic_ai.py     # vouch_tool (PydanticAI)
+│   └── mcp.py             # MCP server (Claude Desktop, Cursor)
 ```
 
 ### Key dependencies
@@ -987,6 +1008,6 @@ MIT — see [`LICENSE`](LICENSE).
 
 ## Acknowledgments
 
-Built by [@evertonsjjj](https://github.com/evertonsjjj) as a portfolio project exploring the gap between agent search APIs and browser automation. Feedback and contributions welcome.
+Built by [@evertonsjjj](https://github.com/evertonsjjj). Early-stage open source — looking for real-world feedback, contributors, and battle-tested use cases. The gap this fills (curated-source search for agents) is one I needed myself, but I'd rather hear what's wrong with it from people using it than guess in isolation.
 
 If vouch helps you, a ⭐ on GitHub goes a long way.

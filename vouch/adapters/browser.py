@@ -158,6 +158,8 @@ class BrowserAdapter(SiteAdapter):
     async def _template_path(self, page: Page, ctx: AdapterContext) -> list[Chunk]:
         from urllib.parse import quote_plus, urljoin
 
+        # Caller invariant: this method only runs when search_url_template is set.
+        assert ctx.site.search_url_template is not None
         url = ctx.site.search_url_template.format(query=quote_plus(ctx.query))
         if not url.startswith("http"):
             url = urljoin(ctx.site.homepage, url)

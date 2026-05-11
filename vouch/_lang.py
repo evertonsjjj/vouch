@@ -221,7 +221,7 @@ def detect_language(text: str) -> str:
 
     tokens = set(_TOKEN.findall(text))
 
-    score = Counter()
+    score: Counter[str] = Counter()
     score["pt"] = len(tokens & _PT_MARKERS) + (2 if any("ç" in t for t in tokens) else 0)
     score["es"] = len(tokens & _ES_MARKERS)
     score["en"] = len(tokens & _EN_MARKERS)

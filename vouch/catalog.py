@@ -172,7 +172,7 @@ class Catalog:
             self._engine = engine
         _Base.metadata.create_all(self._engine)
         # Live callable hooks aren't persisted — store them in-memory.
-        self._hooks: dict[str, dict[str, Callable]] = {}
+        self._hooks: dict[str, dict[str, Callable | None]] = {}
 
     # CRUD -----------------------------------------------------------------
 
@@ -242,7 +242,7 @@ class Catalog:
             s.refresh(row)
             return row.to_site()
 
-    def list(self, *, only_tags: Iterable[str] | None = None) -> list[Site]:
+    def list_sites(self, *, only_tags: Iterable[str] | None = None) -> list[Site]:
         with Session(self._engine) as s:
             rows = list(s.scalars(select(_SiteRow)).all())
         sites = [r.to_site() for r in rows]
@@ -284,7 +284,7 @@ class Catalog:
                 **({"requires_login": True} if s.requires_login else {}),
                 **({"search_url_template": s.search_url_template} if s.search_url_template else {}),
             }
-            for s in self.list()
+            for s in self.list_sites()
         ]
         return yaml.safe_dump({"sites": rows}, sort_keys=False, allow_unicode=True)
 
@@ -303,4 +303,11 @@ class Catalog:
         return self.add_many(sites, replace=replace)
 
     def to_dicts(self) -> list[dict]:
-        return [json.loads(s.model_dump_json()) for s in self.list()]
+        return [json.loads(s.model_dump_json()) for s in self.list_sites()]
+
+
+# Back-compat alias: callers used ``catalog.list()`` before v0.2.1. The method
+# was renamed to ``list_sites`` to avoid shadowing the ``list`` builtin in
+# class-scope type annotations (mypy strictness). Kept as an alias for one
+# minor version; will be removed in v1.0.
+Catalog.list = Catalog.list_sites  # type: ignore[attr-defined]

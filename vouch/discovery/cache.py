@@ -76,7 +76,7 @@ class SelectorCache:
             if not row:
                 return None
             row.hits += 1
-            row.last_used = datetime.now(timezone.utc)
+            row.last_used = datetime.now(timezone.utc)  # type: ignore[assignment]
             s.commit()
             return dict(row.selectors)
 
@@ -96,7 +96,7 @@ class SelectorCache:
             ).first()
             if existing:
                 existing.selectors = selectors
-                existing.last_used = datetime.now(timezone.utc)
+                existing.last_used = datetime.now(timezone.utc)  # type: ignore[assignment]
             else:
                 s.add(_SelectorRow(domain=domain, fingerprint=fp, selectors=selectors))
             s.commit()

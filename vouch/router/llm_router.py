@@ -78,7 +78,7 @@ class LLMRouter(Router):
 
 def _coerce_decisions(data: Any, sites, top_k: int) -> list[RouteDecision]:
     valid_urls = {s.url for s in sites}
-    raw = []
+    raw: list[Any] = []
     if isinstance(data, dict):
         raw = data.get("picks") or data.get("sites") or data.get("results") or []
     elif isinstance(data, list):

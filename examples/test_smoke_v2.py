@@ -114,7 +114,7 @@ def main():
         except Exception as e:
             print(f"add {s.url} failed: {e}")
 
-    print(f"Catalog: {[s.url for s in engine.list()]}")
+    print(f"Catalog: {[s.url for s in engine.list_sites()]}")
     print()
 
     t_global = time.perf_counter()

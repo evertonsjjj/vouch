@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import logging
 import time
+from collections.abc import Sequence
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
@@ -217,8 +218,8 @@ class SearchEngine:
     def update(self, url: str, **fields) -> Site:
         return self.catalog.update(url, **fields)
 
-    def list(self, **kwargs) -> list[Site]:
-        return self.catalog.list(**kwargs)
+    def list_sites(self, **kwargs) -> list[Site]:
+        return self.catalog.list_sites(**kwargs)
 
     # ------------------------------------------------------------------
     # YAML
@@ -380,11 +381,13 @@ class SearchEngine:
             from .catalog import _normalize_domain
 
             wanted = {_normalize_domain(s) for s in sites}
-            in_catalog = {s.url: s for s in self.catalog.list()}
+            in_catalog = {s.url: s for s in self.catalog.list_sites()}
             return [in_catalog[u] for u in wanted if u in in_catalog] + [
                 Site(url=u) for u in wanted if u not in in_catalog
             ]
-        return self.catalog.list(only_tags=only_tags) if only_tags else self.catalog.list()
+        return (
+            self.catalog.list_sites(only_tags=only_tags) if only_tags else self.catalog.list_sites()
+        )
 
     def _route(
         self,
@@ -661,6 +664,13 @@ def _rerank(chunks: list[Chunk], query: str) -> list[Chunk]:
     return scored
 
 
+# Back-compat alias: callers used ``engine.list()`` before v0.2.1. Renamed
+# to ``list_sites`` to avoid shadowing the ``list`` builtin in class-scope
+# type annotations. Kept as an alias for one minor version; will be removed
+# in v1.0.
+SearchEngine.list = SearchEngine.list_sites  # type: ignore[attr-defined]
+
+
 # ----------------------------------------------------------------------
 # Level-1 one-shot search
 # ----------------------------------------------------------------------
@@ -669,7 +679,7 @@ def _rerank(chunks: list[Chunk], query: str) -> list[Chunk]:
 def search(
     query: str,
     *,
-    sites: list[str | Site],
+    sites: Sequence[str | Site],
     llm: str | list[str] = "ollama/qwen2.5:14b",
     depth: int = 1,
     api_keys: dict[str, str] | None = None,

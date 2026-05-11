@@ -55,12 +55,7 @@ log = logging.getLogger("vouch.plugins")
 
 def _load(group: str) -> list[EntryPoint]:
     """Return all entry points in ``group`` installed in this environment."""
-    try:
-        eps = entry_points(group=group)
-    except TypeError:  # Python <3.10 compatibility (we declare 3.10+ but be safe)
-        all_eps = entry_points()
-        eps = all_eps.get(group, [])
-    return list(eps)
+    return list(entry_points(group=group))
 
 
 # ----------------------------------------------------------------------

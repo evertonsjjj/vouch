@@ -41,7 +41,7 @@ def test_duplicate_add_raises_unless_replace(empty_catalog):
 
 
 def test_list_filter_by_tags(populated_catalog):
-    devs = populated_catalog.list(only_tags=["dev"])
+    devs = populated_catalog.list_sites(only_tags=["dev"])
     urls = {s.url for s in devs}
     assert "github.com" in urls and "stackoverflow.com" in urls
     assert "cvm.gov.br" not in urls
@@ -53,7 +53,7 @@ def test_yaml_round_trip(tmp_path, populated_catalog):
     p.write_text(yaml_text, encoding="utf-8")
     fresh = Catalog(tmp_path / "fresh.db")
     fresh.load_yaml(p)
-    assert {s.url for s in fresh.list()} == {s.url for s in populated_catalog.list()}
+    assert {s.url for s in fresh.list_sites()} == {s.url for s in populated_catalog.list_sites()}
 
 
 def test_normalization_lookup(populated_catalog):

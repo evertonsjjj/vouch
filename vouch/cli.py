@@ -162,7 +162,7 @@ def catalog_list(
     json_out: bool = typer.Option(False, "--json"),
 ):
     cat = Catalog(db.expanduser())
-    sites = cat.list()
+    sites = cat.list_sites()
     if json_out:
         console.print_json(json.dumps(cat.to_dicts()))
         return
