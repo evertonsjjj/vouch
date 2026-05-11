@@ -5,6 +5,18 @@ All notable changes to **vouch** are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 this project follows [Semantic Versioning](https://semver.org/).
 
+## [0.2.3] — 2026-05-11
+
+Two more residuals from the curio → vouch rename.
+
+### Fixed
+
+- ``LICENSE``: copyright header said "curio contributors". Now reads
+  "vouch contributors", matching ``pyproject.toml``.
+- ``.gitignore``: the runtime-data block was ignoring ``.curio/``. The
+  actual runtime dir is ``~/.vouch`` (per ``cli.py``, ``config.py``,
+  ``server.py``, ``profiles/update.py``); now ignores ``.vouch/``.
+
 ## [0.2.2] — 2026-05-11
 
 Doc-only patch. No code changes; same wheel contents as 0.2.1 plus the
@@ -197,6 +209,7 @@ alias. Safe upgrade from 0.2.0.
 - CrewAI / LangChain / PydanticAI / MCP integrations.
 - Optional vision-LLM CAPTCHA solver, APScheduler change monitor.
 
+[0.2.3]: https://github.com/evertonsjjj/vouch/releases/tag/v0.2.3
 [0.2.2]: https://github.com/evertonsjjj/vouch/releases/tag/v0.2.2
 [0.2.1]: https://github.com/evertonsjjj/vouch/releases/tag/v0.2.1
 [0.2.0]: https://github.com/evertonsjjj/vouch/releases/tag/v0.2.0
