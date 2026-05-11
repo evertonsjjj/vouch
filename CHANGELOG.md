@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to **farol** are documented here.
+All notable changes to **vouch** are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 this project follows [Semantic Versioning](https://semver.org/).
@@ -9,15 +9,15 @@ this project follows [Semantic Versioning](https://semver.org/).
 
 ### Renamed
 
-- **Package renamed from ``curio`` to ``farol``** to avoid conflict with the
+- **Package renamed from ``curio`` to ``vouch``** to avoid conflict with the
   existing ``curio`` async library on PyPI. The old ``CurioError`` exception
-  is kept as a back-compat alias of ``FarolError`` and will be removed in
+  is kept as a back-compat alias of ``VouchError`` and will be removed in
   v1.0. Update your imports::
 
       # before
       from curio import SearchEngine
       # after
-      from farol import SearchEngine
+      from vouch import SearchEngine
 
 ### Added (continued)
 
@@ -28,20 +28,20 @@ this project follows [Semantic Versioning](https://semver.org/).
   fall back to the v0.1 "fresh browser per search" path. Engine adds
   ``close()`` / context-manager protocol for explicit teardown.
 - **Plugin model via entry_points** — three discovery groups:
-    - ``farol.adapters`` — per-host SiteAdapter implementations
+    - ``vouch.adapters`` — per-host SiteAdapter implementations
       (``arxiv.org`` exact, ``*.gov.br`` suffix, or ``*`` fallback).
-    - ``farol.routers`` — alternative router strategies.
-    - ``farol.profiles`` — community ProfileRegistry bundles.
-  Third parties can ``pip install farol-adapter-arxiv`` and the next
+    - ``vouch.routers`` — alternative router strategies.
+    - ``vouch.profiles`` — community ProfileRegistry bundles.
+  Third parties can ``pip install vouch-adapter-arxiv`` and the next
   ``SearchEngine`` picks it up. See ``docs/plugins.md`` for the contract.
-  CLI: ``farol plugins list``.
-- **Profile auto-update** — ``farol profiles update`` fetches the latest
+  CLI: ``vouch plugins list``.
+- **Profile auto-update** — ``vouch profiles update`` fetches the latest
   community registry from a configurable URL (default
-  ``github.com/yourhandle/farol-profiles``), validates the YAML, and merges
+  ``github.com/everton-evton/vouch-profiles``), validates the YAML, and merges
   it on top of the bundled ``builtin.yaml``. Honors HTTP caching
   (ETag / If-Modified-Since) and falls back gracefully to the bundled
   profiles on any network failure.
-- **Tesseract OCR fallback** for text CAPTCHAs (``farol[ocr]``). Classical
+- **Tesseract OCR fallback** for text CAPTCHAs (``vouch[ocr]``). Classical
   CPU OCR — ~50-200 ms per image, $0, no GPU, no model download. The
   ``CaptchaSolver`` now chains automatically: Tesseract first → vision LLM
   on low confidence → return best result. Image-grid CAPTCHAs still need a
@@ -71,11 +71,11 @@ this project follows [Semantic Versioning](https://semver.org/).
 - **Probe crawl on add()** — opt-in `auto_probe_on_add=True` runs a tiny
   probe query the moment a site is added so the engine learns its
   working_tier and selectors before any real user query.
-- **Profile registry** — bundled `farol/profiles/builtin.yaml` ships with
+- **Profile registry** — bundled `vouch/profiles/builtin.yaml` ships with
   curated profiles for 24 popular sites (arxiv, github, huggingface, pypi,
   npmjs, crates, MDN, Wikipedia ×3, gov.uk, irs.gov, sede.agenciatributaria,
   jusbrasil, planalto, BBC, Folha, El País, Stack Overflow, Reddit, …).
-  New CLI commands: `farol profiles list/show/import`.
+  New CLI commands: `vouch profiles list/show/import`.
 - **Accept-Language header** — query language detected (PT/ES/EN/FR/IT/DE)
   and matching `Accept-Language` is sent on HTTP fetches. Reduces redirects
   to wrong-language site versions.
@@ -127,5 +127,5 @@ this project follows [Semantic Versioning](https://semver.org/).
 - CrewAI / LangChain / PydanticAI / MCP integrations.
 - Optional vision-LLM CAPTCHA solver, APScheduler change monitor.
 
-[0.2.0]: https://github.com/yourhandle/farol/releases/tag/v0.2.0
-[0.1.0]: https://github.com/yourhandle/farol/releases/tag/v0.1.0
+[0.2.0]: https://github.com/everton-evton/vouch/releases/tag/v0.2.0
+[0.1.0]: https://github.com/everton-evton/vouch/releases/tag/v0.1.0

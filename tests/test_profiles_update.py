@@ -6,7 +6,7 @@ import httpx
 import pytest
 import respx
 
-from farol.profiles import update as updater
+from vouch.profiles import update as updater
 
 DUMMY_YAML = """\
 profiles:

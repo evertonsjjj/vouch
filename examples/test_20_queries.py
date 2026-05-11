@@ -14,7 +14,7 @@ import time
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", line_buffering=True)
 
-from farol import SearchEngine, Site
+from vouch import SearchEngine, Site
 
 # ---- Catalog ---------------------------------------------------------------
 

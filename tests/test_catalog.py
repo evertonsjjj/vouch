@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from farol import Catalog, Site
-from farol.exceptions import CatalogError
+from vouch import Catalog, Site
+from vouch.exceptions import CatalogError
 
 
 def test_url_normalization():

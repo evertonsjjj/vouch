@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typer.testing import CliRunner
 
-from farol.cli import app
+from vouch.cli import app
 
 runner = CliRunner()
 
@@ -12,7 +12,7 @@ runner = CliRunner()
 def test_version():
     r = runner.invoke(app, ["--version"])
     assert r.exit_code == 0
-    assert "farol" in r.stdout
+    assert "vouch" in r.stdout
     assert "0.2.0" in r.stdout
 
 

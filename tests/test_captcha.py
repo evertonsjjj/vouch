@@ -11,7 +11,7 @@ from unittest.mock import patch
 
 import pytest
 
-from farol.captcha import CaptchaResult, CaptchaSolver
+from vouch.captcha import CaptchaResult, CaptchaSolver
 
 
 class _FakeVisionLLM:
@@ -37,9 +37,9 @@ def test_text_uses_tesseract_first_when_preferred():
     solver = CaptchaSolver(vision_llm=fake_llm, min_confidence=0.5, prefer_tesseract=True)
 
     with (
-        patch("farol.captcha.tesseract.is_available", return_value=True),
+        patch("vouch.captcha.tesseract.is_available", return_value=True),
         patch(
-            "farol.captcha.tesseract.solve_text",
+            "vouch.captcha.tesseract.solve_text",
             return_value=CaptchaResult(
                 solved=True, text="ABC123", confidence=0.85, kind="text", solver="tesseract"
             ),
@@ -56,11 +56,13 @@ def test_text_uses_tesseract_first_when_preferred():
 def test_default_uses_vision_llm_first():
     """Default (prefer_tesseract=False): vision LLM goes first; Tesseract not called when LLM solves."""
     fake_llm = _FakeVisionLLM('{"text":"FROM_LLM","confidence":0.95}')
-    solver = CaptchaSolver(vision_llm=fake_llm, min_confidence=0.5)  # prefer_tesseract default = False
+    solver = CaptchaSolver(
+        vision_llm=fake_llm, min_confidence=0.5
+    )  # prefer_tesseract default = False
 
     with (
-        patch("farol.captcha.tesseract.is_available", return_value=True) as ta,
-        patch("farol.captcha.tesseract.solve_text") as ts,
+        patch("vouch.captcha.tesseract.is_available", return_value=True) as ta,
+        patch("vouch.captcha.tesseract.solve_text") as ts,
     ):
         result = solver.solve(b"<image-bytes>", kind="text")
 
@@ -78,9 +80,9 @@ def test_text_escalates_to_llm_when_tesseract_unconfident():
     solver = CaptchaSolver(vision_llm=fake_llm, min_confidence=0.7, prefer_tesseract=True)
 
     with (
-        patch("farol.captcha.tesseract.is_available", return_value=True),
+        patch("vouch.captcha.tesseract.is_available", return_value=True),
         patch(
-            "farol.captcha.tesseract.solve_text",
+            "vouch.captcha.tesseract.solve_text",
             return_value=CaptchaResult(
                 solved=False, text="garbled", confidence=0.30, kind="text", solver="tesseract"
             ),
@@ -97,12 +99,14 @@ def test_text_escalates_to_llm_when_tesseract_unconfident():
 def test_default_falls_back_to_tesseract_when_llm_fails():
     """Default chain: vision LLM returns low conf → Tesseract used as fallback."""
     fake_llm = _FakeVisionLLM('{"text":"weak","confidence":0.20}')
-    solver = CaptchaSolver(vision_llm=fake_llm, min_confidence=0.7)  # default prefer_tesseract=False
+    solver = CaptchaSolver(
+        vision_llm=fake_llm, min_confidence=0.7
+    )  # default prefer_tesseract=False
 
     with (
-        patch("farol.captcha.tesseract.is_available", return_value=True),
+        patch("vouch.captcha.tesseract.is_available", return_value=True),
         patch(
-            "farol.captcha.tesseract.solve_text",
+            "vouch.captcha.tesseract.solve_text",
             return_value=CaptchaResult(
                 solved=True, text="GOOD", confidence=0.85, kind="text", solver="tesseract"
             ),
@@ -120,9 +124,9 @@ def test_text_returns_best_when_no_llm_and_tesseract_weak():
     solver = CaptchaSolver(vision_llm=None, min_confidence=0.7)
 
     with (
-        patch("farol.captcha.tesseract.is_available", return_value=True),
+        patch("vouch.captcha.tesseract.is_available", return_value=True),
         patch(
-            "farol.captcha.tesseract.solve_text",
+            "vouch.captcha.tesseract.solve_text",
             return_value=CaptchaResult(
                 solved=False, text="weak", confidence=0.30, kind="text", solver="tesseract"
             ),
@@ -138,7 +142,7 @@ def test_text_returns_best_when_no_llm_and_tesseract_weak():
 def test_text_skips_tesseract_when_unavailable():
     """No Tesseract + no LLM → graceful no_backend_available."""
     solver = CaptchaSolver(vision_llm=None)
-    with patch("farol.captcha.tesseract.is_available", return_value=False):
+    with patch("vouch.captcha.tesseract.is_available", return_value=False):
         result = solver.solve(b"<image-bytes>", kind="text")
     assert not result.solved
     assert result.solver == "" or "no_backend" in result.reason or "vision_llm" in result.reason
@@ -149,7 +153,7 @@ def test_prefer_tesseract_false_skips_to_llm():
     fake_llm = _FakeVisionLLM('{"text":"DIRECT","confidence":0.95}')
     solver = CaptchaSolver(vision_llm=fake_llm, prefer_tesseract=False, min_confidence=0.5)
 
-    with patch("farol.captcha.tesseract.is_available", return_value=True) as is_avail:
+    with patch("vouch.captcha.tesseract.is_available", return_value=True) as is_avail:
         result = solver.solve(b"<image-bytes>", kind="text")
 
     assert result.solved
@@ -183,7 +187,7 @@ def test_image_grid_uses_vision_llm():
 def test_image_grid_does_not_call_tesseract():
     fake_llm = _FakeVisionLLM('{"indices":[1],"confidence":0.9}')
     solver = CaptchaSolver(vision_llm=fake_llm)
-    with patch("farol.captcha.tesseract.solve_text") as solve_text:
+    with patch("vouch.captcha.tesseract.solve_text") as solve_text:
         solver.solve(b"<image>", kind="image_grid", target="cars")
     solve_text.assert_not_called()
 
@@ -206,14 +210,14 @@ def test_unsupported_kind_returns_unsupported():
 
 
 def test_tesseract_is_available_false_when_pytesseract_missing():
-    from farol.captcha import tesseract
+    from vouch.captcha import tesseract
 
     with patch.dict("sys.modules", {"pytesseract": None}):
         assert tesseract.is_available() is False
 
 
 def test_tesseract_solve_returns_unsolved_when_deps_missing():
-    from farol.captcha import tesseract
+    from vouch.captcha import tesseract
 
     # Force the import inside solve_text to fail by removing pytesseract from sys.modules
     with patch.dict("sys.modules", {"pytesseract": None, "PIL": None}):
@@ -223,7 +227,7 @@ def test_tesseract_solve_returns_unsolved_when_deps_missing():
 
 
 @pytest.mark.skipif(
-    not __import__("farol.captcha.tesseract", fromlist=["is_available"]).is_available(),
+    not __import__("vouch.captcha.tesseract", fromlist=["is_available"]).is_available(),
     reason="Tesseract binary not installed on this machine",
 )
 def test_tesseract_smoke_with_real_binary(tmp_path):
@@ -234,7 +238,7 @@ def test_tesseract_smoke_with_real_binary(tmp_path):
     """
     from PIL import Image  # type: ignore
 
-    from farol.captcha import tesseract
+    from vouch.captcha import tesseract
 
     img_path = tmp_path / "blank.png"
     Image.new("RGB", (200, 60), "white").save(img_path)

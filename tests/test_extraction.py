@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from farol import Site
-from farol.extraction.trafilatura import to_chunks
+from vouch import Site
+from vouch.extraction.trafilatura import to_chunks
 
 _SAMPLE = """
 <html><body>

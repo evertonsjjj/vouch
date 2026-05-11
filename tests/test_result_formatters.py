@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 
-from farol.models import Chunk, SearchResult
+from vouch.models import Chunk, SearchResult
 
 
 def _result() -> SearchResult:

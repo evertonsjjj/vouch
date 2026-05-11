@@ -34,11 +34,11 @@ jobs:
 
       - name: Lint (ruff)
         run: |
-          ruff check farol tests
-          ruff format --check farol tests
+          ruff check vouch tests
+          ruff format --check vouch tests
 
       - name: Test
-        run: pytest --cov=farol --cov-report=xml -q
+        run: pytest --cov=vouch --cov-report=xml -q
 
       - name: Upload coverage
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
@@ -59,8 +59,8 @@ jobs:
       - run: python -m build
       - name: Verify wheel installs cleanly
         run: |
-          pip install dist/farol-*.whl
-          python -c "import farol; print('OK', farol.__version__)"
+          pip install dist/vouch-*.whl
+          python -c "import vouch; print('OK', vouch.__version__)"
       - uses: actions/upload-artifact@v4
         with:
           name: dist

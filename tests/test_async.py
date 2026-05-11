@@ -6,8 +6,8 @@ from unittest.mock import patch
 
 import pytest
 
-from farol import Chunk, SearchEngine
-from farol.adapters.base import AdapterContext, SiteAdapter
+from vouch import Chunk, SearchEngine
+from vouch.adapters.base import AdapterContext, SiteAdapter
 
 
 class _StubAdapter(SiteAdapter):
@@ -42,7 +42,7 @@ def engine(tmp_path, populated_catalog):
 
 @pytest.mark.asyncio
 async def test_asearch_returns_search_result(engine):
-    with patch("farol.engine.build_adapter", lambda *a, **kw: _StubAdapter()):
+    with patch("vouch.engine.build_adapter", lambda *a, **kw: _StubAdapter()):
         result = await engine.asearch("hello async", depth=0, max_results=3)
     assert result.query == "hello async"
     assert len(result.chunks) > 0
@@ -50,6 +50,6 @@ async def test_asearch_returns_search_result(engine):
 
 @pytest.mark.asyncio
 async def test_asearch_passes_kwargs(engine):
-    with patch("farol.engine.build_adapter", lambda *a, **kw: _StubAdapter()):
+    with patch("vouch.engine.build_adapter", lambda *a, **kw: _StubAdapter()):
         result = await engine.asearch("foo", sites=["arxiv.org"], depth=1)
     assert all(c.site == "arxiv.org" for c in result.chunks)

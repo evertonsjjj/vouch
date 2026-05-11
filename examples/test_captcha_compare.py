@@ -13,10 +13,10 @@ from pathlib import Path
 
 os.environ["PYTHONUNBUFFERED"] = "1"
 
-from farol._llm import LLMClient
-from farol.captcha import CaptchaSolver
-from farol.captcha.tesseract import is_available as tesseract_available
-from farol.captcha.tesseract import solve_text as tesseract_solve
+from vouch._llm import LLMClient
+from vouch.captcha import CaptchaSolver
+from vouch.captcha.tesseract import is_available as tesseract_available
+from vouch.captcha.tesseract import solve_text as tesseract_solve
 
 CACHE_DIR = Path("./test-cache-captcha")
 LOG = CACHE_DIR / "compare.log"
@@ -31,7 +31,7 @@ def w(line: str = "") -> None:
 
 
 CASES = [
-    ("FAROL2026", CACHE_DIR / "captcha_1_FAROL2026.png"),
+    ("VOUCH2026", CACHE_DIR / "captcha_1_VOUCH2026.png"),
     ("AB7XQ9", CACHE_DIR / "captcha_2_AB7XQ9.png"),
     ("M4K9P2", CACHE_DIR / "captcha_3_M4K9P2.png"),
     ("XR8YT5", CACHE_DIR / "captcha_4_XR8YT5.png"),

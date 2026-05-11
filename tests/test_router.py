@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from farol.router import AllRouter, TagRouter, build_router
-from farol.router.base import RoutingContext
+from vouch.router import AllRouter, TagRouter, build_router
+from vouch.router.base import RoutingContext
 
 
 def test_all_router_returns_everything(sample_sites):

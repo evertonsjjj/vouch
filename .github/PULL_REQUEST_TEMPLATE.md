@@ -7,7 +7,7 @@ What does this PR change and why?
 - [ ] Bug fix
 - [ ] New feature
 - [ ] Breaking API change
-- [ ] New site profile (`farol/profiles/builtin.yaml`)
+- [ ] New site profile (`vouch/profiles/builtin.yaml`)
 - [ ] Docs / examples / tests only
 
 ## Test plan
@@ -19,5 +19,5 @@ What does this PR change and why?
 ## Checklist
 
 - [ ] CHANGELOG updated under `[Unreleased]`
-- [ ] Public API additions exported from `farol/__init__.py`
+- [ ] Public API additions exported from `vouch/__init__.py`
 - [ ] Docstrings on new public functions

@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
-from farol import Site
-from farol.discovery.cache import SelectorCache
-from farol.extraction.llm_extract import (
+from vouch import Site
+from vouch.discovery.cache import SelectorCache
+from vouch.extraction.llm_extract import (
     extract_with_llm_fallback,
     harvest_candidates,
     looks_low_quality,
 )
-from farol.models import Chunk
+from vouch.models import Chunk
 
 
 class _FakeLLM:
@@ -132,7 +132,7 @@ def test_pattern_is_cached_after_first_llm_call(tmp_path):
 
 def test_to_chunks_invokes_llm_when_heuristic_is_weak(tmp_path):
     """End-to-end: to_chunks() with weak heuristic should use the LLM fallback."""
-    from farol.extraction.trafilatura import to_chunks
+    from vouch.extraction.trafilatura import to_chunks
 
     site = Site("example.com")
     cache = SelectorCache(tmp_path / "sel.db")
@@ -193,7 +193,7 @@ def test_inferred_pattern_requires_3_plus_picks(tmp_path):
 
 def test_to_chunks_skips_llm_if_no_query():
     """No query → no LLM call, just heuristic."""
-    from farol.extraction.trafilatura import to_chunks
+    from vouch.extraction.trafilatura import to_chunks
 
     site = Site("example.com")
     llm = _FakeLLM({})

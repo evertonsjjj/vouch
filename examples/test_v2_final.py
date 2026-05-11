@@ -12,7 +12,7 @@ import os
 import time
 from collections import Counter
 
-from farol import SearchEngine, get_profile
+from vouch import SearchEngine, get_profile
 
 LOG = "./test-cache-final/run.log"
 

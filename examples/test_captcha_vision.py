@@ -24,9 +24,9 @@ except ImportError:
     print("ERROR: pillow not installed. Run: pip install Pillow")
     sys.exit(1)
 
-from farol._llm import LLMClient
-from farol.captcha import CaptchaSolver
-from farol.captcha.tesseract import is_available as tesseract_available
+from vouch._llm import LLMClient
+from vouch.captcha import CaptchaSolver
+from vouch.captcha.tesseract import is_available as tesseract_available
 
 LOG = "./test-cache-captcha/run.log"
 os.makedirs("./test-cache-captcha", exist_ok=True)
@@ -138,7 +138,7 @@ def main():
 
     # 4 progressively-harder CAPTCHAs
     test_cases = [
-        ("FAROL2026", 1, "easy — minimal rotation, no noise"),
+        ("VOUCH2026", 1, "easy — minimal rotation, no noise"),
         ("AB7XQ9", 2, "medium — bigger rotation + scribble lines"),
         ("M4K9P2", 3, "hard — lines + speckle noise + blur"),
         ("XR8YT5", 4, "very hard — heavy speckle noise"),

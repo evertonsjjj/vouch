@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from farol import Site, get_profile, list_profiles
-from farol.profiles import ProfileRegistry
+from vouch import Site, get_profile, list_profiles
+from vouch.profiles import ProfileRegistry
 
 
 def test_builtin_loads_at_least_20_profiles():

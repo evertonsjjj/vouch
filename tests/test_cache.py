@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from farol.discovery.cache import SelectorCache, fingerprint_html
+from vouch.discovery.cache import SelectorCache, fingerprint_html
 
 
 def test_fingerprint_stable():

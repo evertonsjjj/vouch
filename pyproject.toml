@@ -3,13 +3,13 @@ requires = ["hatchling>=1.21"]
 build-backend = "hatchling.build"
 
 [project]
-name = "farol"
+name = "vouch"
 version = "0.2.0"
 description = "Curated AI search for agents — bring your own sources, your own LLM."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
-authors = [{ name = "farol contributors" }]
+authors = [{ name = "vouch contributors" }]
 keywords = ["search", "agents", "llm", "browser", "automation", "rag", "tavily", "perplexity"]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -78,18 +78,18 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourhandle/farol"
-Repository = "https://github.com/yourhandle/farol"
-Issues = "https://github.com/yourhandle/farol/issues"
+Homepage = "https://github.com/everton-evton/vouch"
+Repository = "https://github.com/everton-evton/vouch"
+Issues = "https://github.com/everton-evton/vouch/issues"
 
 [project.scripts]
-farol = "farol.cli:app"
+vouch = "vouch.cli:app"
 
 [tool.hatch.build.targets.wheel]
-packages = ["farol"]
+packages = ["vouch"]
 
 [tool.hatch.build.targets.wheel.force-include]
-"farol/profiles/builtin.yaml" = "farol/profiles/builtin.yaml"
+"vouch/profiles/builtin.yaml" = "vouch/profiles/builtin.yaml"
 
 [tool.ruff]
 line-length = 100

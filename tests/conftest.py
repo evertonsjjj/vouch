@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from farol import Catalog, SearchEngine, Site
+from vouch import Catalog, SearchEngine, Site
 
 
 @pytest.fixture

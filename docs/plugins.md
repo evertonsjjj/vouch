@@ -1,19 +1,19 @@
-# Writing a farol plugin
+# Writing a vouch plugin
 
-farol discovers plugins via Python's standard `entry_points` mechanism — the
+vouch discovers plugins via Python's standard `entry_points` mechanism — the
 same one [pytest](https://docs.pytest.org/en/stable/how-to/writing_plugins.html)
 and [click](https://click.palletsprojects.com/en/stable/setuptools/) use.
 A plugin is just a regular Python package published to PyPI; once a user
-does `pip install farol-adapter-arxiv` (or whatever you name it), the next
+does `pip install vouch-adapter-arxiv` (or whatever you name it), the next
 `SearchEngine()` in their project picks it up automatically.
 
 Three plugin groups are supported:
 
 | Group               | What it provides                                      |
 |---------------------|-------------------------------------------------------|
-| `farol.adapters`    | per-host search executors with hand-tuned extraction  |
-| `farol.routers`     | alternative router strategies (e.g. RAG, vector DB)   |
-| `farol.profiles`    | curated `ProfileRegistry` for a set of sites          |
+| `vouch.adapters`    | per-host search executors with hand-tuned extraction  |
+| `vouch.routers`     | alternative router strategies (e.g. RAG, vector DB)   |
+| `vouch.profiles`    | curated `ProfileRegistry` for a set of sites          |
 
 ## Example: adapter plugin
 
@@ -22,8 +22,8 @@ hard-code selectors so first-time use is instant.
 
 ```python
 # my_arxiv_plugin/__init__.py
-from farol.adapters.base import AdapterContext, SiteAdapter
-from farol.models import Chunk
+from vouch.adapters.base import AdapterContext, SiteAdapter
+from vouch.models import Chunk
 
 
 class ArxivAdapter(SiteAdapter):
@@ -39,7 +39,7 @@ class ArxivAdapter(SiteAdapter):
 
 
 def make(*, site, config, llm=None, selector_cache=None, pool=None, **kwargs):
-    """Factory called by farol's build_adapter when site.url matches."""
+    """Factory called by vouch's build_adapter when site.url matches."""
     return ArxivAdapter(config=config, llm=llm, selector_cache=selector_cache)
 ```
 
@@ -47,15 +47,15 @@ Declare it in your `pyproject.toml`:
 
 ```toml
 [project]
-name = "farol-adapter-arxiv"
+name = "vouch-adapter-arxiv"
 version = "0.1.0"
-dependencies = ["farol>=0.2"]
+dependencies = ["vouch>=0.2"]
 
-[project.entry-points."farol.adapters"]
+[project.entry-points."vouch.adapters"]
 "arxiv.org" = "my_arxiv_plugin:make"
 ```
 
-Now `pip install farol-adapter-arxiv` is enough — `build_adapter(site)`
+Now `pip install vouch-adapter-arxiv` is enough — `build_adapter(site)`
 will call your factory whenever `site.url == "arxiv.org"`.
 
 ### Host patterns
@@ -76,8 +76,8 @@ If you maintain a curated bundle of `Site` profiles for a domain
 profile-registry plugin:
 
 ```python
-# farol_profiles_br_tax/__init__.py
-from farol.profiles import ProfileRegistry
+# vouch_profiles_br_tax/__init__.py
+from vouch.profiles import ProfileRegistry
 
 
 def registry() -> ProfileRegistry:
@@ -85,21 +85,21 @@ def registry() -> ProfileRegistry:
 ```
 
 ```toml
-[project.entry-points."farol.profiles"]
-"br-tax" = "farol_profiles_br_tax:registry"
+[project.entry-points."vouch.profiles"]
+"br-tax" = "vouch_profiles_br_tax:registry"
 ```
 
-After install, `farol.get_profile("cvm.gov.br")` returns your curated entry
-even though it's not in farol's `builtin.yaml`.
+After install, `vouch.get_profile("cvm.gov.br")` returns your curated entry
+even though it's not in vouch's `builtin.yaml`.
 
 ## Example: router plugin
 
 If you want a router that asks a vector DB instead of the LLM:
 
 ```python
-# farol_router_pinecone/__init__.py
-from farol.router.base import Router, RoutingContext
-from farol.models import RouteDecision
+# vouch_router_pinecone/__init__.py
+from vouch.router.base import Router, RoutingContext
+from vouch.models import RouteDecision
 
 
 class PineconeRouter(Router):
@@ -111,15 +111,15 @@ class PineconeRouter(Router):
 ```
 
 ```toml
-[project.entry-points."farol.routers"]
-"pinecone" = "farol_router_pinecone:PineconeRouter"
+[project.entry-points."vouch.routers"]
+"pinecone" = "vouch_router_pinecone:PineconeRouter"
 ```
 
 End users then opt in via:
 
 ```python
-from farol import SearchEngine
-from farol.plugins import find_router_factory
+from vouch import SearchEngine
+from vouch.plugins import find_router_factory
 
 router_cls = find_router_factory("pinecone")
 engine = SearchEngine(router=router_cls(index_name="..."))
@@ -128,7 +128,7 @@ engine = SearchEngine(router=router_cls(index_name="..."))
 ## Listing what's installed
 
 ```bash
-farol plugins list
+vouch plugins list
 ```
 
 prints the names of all installed adapter / router / profile plugins.

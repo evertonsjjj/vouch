@@ -11,7 +11,7 @@ A clear and concise description.
 **Reproducer**
 
 ```python
-from farol import SearchEngine, Site
+from vouch import SearchEngine, Site
 engine = SearchEngine(llm="ollama/qwen2.5:7b")
 engine.add(Site("..."))
 result = engine.search("...")
@@ -26,7 +26,7 @@ result = engine.search("...")
 
 - OS: <Windows / macOS / Linux>
 - Python: <output of `python --version`>
-- farol: <output of `farol --version`>
+- vouch: <output of `vouch --version`>
 - Extras installed: <`browser`, `stealth`, `monitor`, etc.>
 
 **Logs / traceback**

@@ -10,7 +10,7 @@ from collections import Counter
 # Force unbuffered + UTF-8
 os.environ["PYTHONUNBUFFERED"] = "1"
 
-from farol import SearchEngine, Site
+from vouch import SearchEngine, Site
 
 LOG = "./test-cache-18/run.log"
 

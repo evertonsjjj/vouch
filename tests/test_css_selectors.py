@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from farol import Site
-from farol.discovery.cache import SelectorCache
-from farol.extraction import css_selectors as css
+from vouch import Site
+from vouch.discovery.cache import SelectorCache
+from vouch.extraction import css_selectors as css
 
 _HTML = """
 <html><body>

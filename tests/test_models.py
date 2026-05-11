@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from farol.models import Chunk, SearchResult, TokenUsage
+from vouch.models import Chunk, SearchResult, TokenUsage
 
 
 def test_token_addition():

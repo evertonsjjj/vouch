@@ -9,7 +9,7 @@ labels: profile
 e.g. `example.com`
 
 **Why curate this site?**
-What category, language, audience? Why should farol's users know about it?
+What category, language, audience? Why should vouch's users know about it?
 
 **Suggested profile YAML**
 

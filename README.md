@@ -1,16 +1,16 @@
-# farol
+# vouch
 
 > **Curated AI search for agents.** Bring your own sources, your own LLM. The self-hosted, agent-ready alternative to Tavily and Perplexity for trusted-source research.
 
-[![PyPI version](https://img.shields.io/pypi/v/farol)](https://pypi.org/project/farol/)
-[![CI](https://github.com/yourhandle/farol/actions/workflows/ci.yml/badge.svg)](https://github.com/yourhandle/farol/actions/workflows/ci.yml)
+[![PyPI version](https://img.shields.io/pypi/v/vouch)](https://pypi.org/project/vouch/)
+[![CI](https://github.com/everton-evton/vouch/actions/workflows/ci.yml/badge.svg)](https://github.com/everton-evton/vouch/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 
-**farol** is a Python library that lets you register a list of trusted sites with metadata (category, description, tags), and then runs intelligent searches across them using any LLM — including local models via Ollama. The AI dynamically figures out *how* to search each site (no manual selectors), caches what it learns, and returns structured results ready to feed an agent.
+**vouch** is a Python library that lets you register a list of trusted sites with metadata (category, description, tags), and then runs intelligent searches across them using any LLM — including local models via Ollama. The AI dynamically figures out *how* to search each site (no manual selectors), caches what it learns, and returns structured results ready to feed an agent.
 
 ```python
-from farol import SearchEngine, Site
+from vouch import SearchEngine, Site
 
 engine = SearchEngine(llm="ollama/qwen2.5:14b")
 engine.add(Site("cvm.gov.br", category="regulação financeira BR"))
@@ -25,7 +25,7 @@ for r in results.chunks:
 
 ## Table of contents
 
-- [Why farol](#why-farol)
+- [Why vouch](#why-vouch)
 - [How it compares](#how-it-compares)
 - [Installation](#installation)
 - [Quick start](#quick-start)
@@ -54,31 +54,31 @@ for r in results.chunks:
 - **CSS selector pinning** — the AI now examines DOM context and emits reusable `{container, title, url, snippet, date, author}` selectors. Cached in SQLite; subsequent calls replay via `lxml.cssselect` — no LLM, milliseconds.
 - **Auto-escalation chain** — `http → browser → stealth`. The engine learns the cheapest tier each site needs and persists it.
 - **Browser pool** — one shared Chromium across all searches in a session. Eliminates the per-call launch overhead and the Windows-on-fresh-fork instability.
-- **Plugin model** — `pip install farol-adapter-arxiv` (or anything matching `farol-adapter-*`, `farol-router-*`, `farol-profiles-*`) and the next `SearchEngine` picks it up automatically via Python entry_points. See [`docs/plugins.md`](docs/plugins.md).
-- **Profile registry + auto-update** — 24 curated profiles ship in the box (arxiv, github, huggingface, gov.uk, irs.gov, sede.agenciatributaria, jusbrasil, MDN, pypi, …). `farol profiles update` pulls the latest community registry.
+- **Plugin model** — `pip install vouch-adapter-arxiv` (or anything matching `vouch-adapter-*`, `vouch-router-*`, `vouch-profiles-*`) and the next `SearchEngine` picks it up automatically via Python entry_points. See [`docs/plugins.md`](docs/plugins.md).
+- **Profile registry + auto-update** — 24 curated profiles ship in the box (arxiv, github, huggingface, gov.uk, irs.gov, sede.agenciatributaria, jusbrasil, MDN, pypi, …). `vouch profiles update` pulls the latest community registry.
 - **Auto-DNS resolution** — fixes wrong-host catalog entries automatically (`agenciatributaria.es` → `sede.agenciatributaria.gob.es`).
 - **Async API** — `await engine.asearch(query, ...)` alongside the sync API.
 - **Result formatting** — `result.to_markdown()`, `to_json()`.
 - **Smarter quality detector** — flags megamenu shells, recursive search-page links, no-results sentinels in PT/ES/EN.
 - **Probe crawl on `add()`** — opt-in: site profile is learned the moment you add it, not on the first user query.
-- **Package renamed from `curio` to `farol`** (the `curio` name on PyPI is taken by David Beazley's async library since 2016).
+- **Package renamed from `curio` to `vouch`** (the `curio` name on PyPI is taken by David Beazley's async library since 2016).
 
 See [CHANGELOG.md](CHANGELOG.md) for the full list.
 
-## Why farol
+## Why vouch
 
 The agentic AI ecosystem has two kinds of search tools:
 
 - **Open-web search** (Tavily, Exa, Perplexica, Firecrawl `/search`): great for broad questions, but you can't tell them "only use these sources I trust."
 - **Browser agents** (Stagehand, Skyvern, browser-use): great at navigating *one* site at a time, but they don't know *which* site to navigate to and don't keep a registry of your trusted sources.
 
-**farol fills the gap in between**: a persistent catalog of sites you trust, with an LLM that reads your descriptions to route each query to the right sources, a browser layer that learns how to search each site once and caches the selectors, and a clean tool interface for CrewAI / LangChain / PydanticAI / MCP.
+**vouch fills the gap in between**: a persistent catalog of sites you trust, with an LLM that reads your descriptions to route each query to the right sources, a browser layer that learns how to search each site once and caches the selectors, and a clean tool interface for CrewAI / LangChain / PydanticAI / MCP.
 
 It's what you'd build if you wanted Tavily, but **for your own list of sources**, **using your own LLM**, **without paying anyone**.
 
 ## How it compares
 
-| | farol | Tavily / Exa | Perplexica | browser-use | Stagehand | Kagi Lenses |
+| | vouch | Tavily / Exa | Perplexica | browser-use | Stagehand | Kagi Lenses |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
 | Curated source list with metadata | ✅ | ⚠️ per call | ❌ | ❌ | ❌ | ✅ |
 | LLM routing by description | ✅ | ❌ | ❌ | ❌ | ❌ | ⚠️ |
@@ -94,24 +94,24 @@ It's what you'd build if you wanted Tavily, but **for your own list of sources**
 Minimal install (HTTP-only, no browser):
 
 ```bash
-pip install farol
+pip install vouch
 ```
 
 Most users want the browser layer too:
 
 ```bash
-pip install "farol[browser]"
-farol install-browser   # downloads Chromium for Playwright
+pip install "vouch[browser]"
+vouch install-browser   # downloads Chromium for Playwright
 ```
 
 Optional extras:
 
 ```bash
-pip install "farol[browser,stealth]"     # patchright for harder sites
-pip install "farol[browser,vision]"      # CAPTCHA assist via vision LLM
-pip install "farol[browser,monitor]"     # APScheduler for change tracking
-pip install "farol[browser,server]"      # FastAPI dashboard + MCP server
-pip install "farol[all]"                 # everything
+pip install "vouch[browser,stealth]"     # patchright for harder sites
+pip install "vouch[browser,vision]"      # CAPTCHA assist via vision LLM
+pip install "vouch[browser,monitor]"     # APScheduler for change tracking
+pip install "vouch[browser,server]"      # FastAPI dashboard + MCP server
+pip install "vouch[all]"                 # everything
 ```
 
 **Requirements:** Python 3.10+. Linux, macOS, or Windows. ~500MB disk after `install-browser`.
@@ -124,34 +124,34 @@ pip install "farol[all]"                 # everything
 # 1. Make sure Ollama is running with a capable model
 ollama pull qwen2.5:14b
 
-# 2. Install farol
-pip install "farol[browser]"
-farol install-browser
+# 2. Install vouch
+pip install "vouch[browser]"
+vouch install-browser
 
 # 3. One-liner search
-python -c "from farol import search; print(search('arxiv attention transformers', sites=['arxiv.org']))"
+python -c "from vouch import search; print(search('arxiv attention transformers', sites=['arxiv.org']))"
 ```
 
 ### 30 seconds with a paid API
 
 ```bash
 export ANTHROPIC_API_KEY=sk-ant-...
-pip install "farol[browser]"
-farol install-browser
+pip install "vouch[browser]"
+vouch install-browser
 
-python -c "from farol import search; print(search('FDA drug approvals 2025', sites=['fda.gov'], llm='anthropic/claude-haiku-4-5'))"
+python -c "from vouch import search; print(search('FDA drug approvals 2025', sites=['fda.gov'], llm='anthropic/claude-haiku-4-5'))"
 ```
 
 ## Three ways to use
 
-farol has **three progressive levels of API**. Pick the one that fits your case — they all coexist and use the same engine underneath.
+vouch has **three progressive levels of API**. Pick the one that fits your case — they all coexist and use the same engine underneath.
 
 ### Level 1 — One-shot function
 
 For quick scripts or trying it out:
 
 ```python
-from farol import search
+from vouch import search
 
 results = search(
     query="regulamentação fundos 2026",
@@ -168,11 +168,11 @@ No catalog, no metadata, no persistence. Ephemeral. Good for `python -c "..."`.
 The typical workflow. Build a catalog in code:
 
 ```python
-from farol import SearchEngine, Site
+from vouch import SearchEngine, Site
 
 engine = SearchEngine(
     llm="ollama/qwen2.5:14b",
-    cache_dir="~/.farol",   # selectors and metadata persist here
+    cache_dir="~/.vouch",   # selectors and metadata persist here
 )
 
 engine.add(Site(
@@ -196,7 +196,7 @@ engine.add(Site("news.ycombinator.com"))
 results = engine.search("transformer architectures", depth=2)
 ```
 
-The catalog persists in SQLite (`~/.farol/catalog.db`). You can `engine.list()`, `engine.remove("arxiv.org")`, `engine.update("arxiv.org", tags=[...])`.
+The catalog persists in SQLite (`~/.vouch/catalog.db`). You can `engine.list()`, `engine.remove("arxiv.org")`, `engine.update("arxiv.org", tags=[...])`.
 
 ### Level 3 — YAML-declared catalog
 
@@ -229,7 +229,7 @@ sites:
 ```
 
 ```python
-from farol import SearchEngine
+from vouch import SearchEngine
 
 engine = SearchEngine.from_yaml("sites.yaml")
 results = engine.search("LLM regulation")
@@ -239,7 +239,7 @@ Same engine, same SQLite cache, just a different way to declare the catalog. Goo
 
 ## Core concepts
 
-farol is built around four primitives. Understanding them helps you customize what you need:
+vouch is built around four primitives. Understanding them helps you customize what you need:
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -265,7 +265,7 @@ Each is a `Protocol` — you can replace any of them. Want a custom router that 
 ## The Site model
 
 ```python
-from farol import Site
+from vouch import Site
 
 Site(
     url: str,                       # required: "cvm.gov.br" or "https://cvm.gov.br"
@@ -290,7 +290,7 @@ Site(
 - **Category and description** are concatenated and fed to the **router LLM** when there are too many sites to search them all. The LLM reads your descriptions and picks the most relevant subset for the query. With no description, the router falls back to the URL and any cached info.
 - **Tags** can be used as filters (`engine.search(query, only_tags=["ml"])`) and as routing hints.
 - **Behavior** controls the browser strategy (see [Optional features](#optional-features)).
-- **`search_url_template`** is the escape hatch: if you already know how the site's search works (`https://github.com/search?q={query}`), provide it and farol skips discovery entirely.
+- **`search_url_template`** is the escape hatch: if you already know how the site's search works (`https://github.com/search?q={query}`), provide it and vouch skips discovery entirely.
 
 ## Search depth
 
@@ -321,7 +321,7 @@ Costs above assume Claude Haiku or Gemini Flash. With Ollama: $0 for everything 
 
 ## Smart Site Routing
 
-When your catalog grows beyond ~5 sites, searching all of them for every query wastes time and tokens. farol uses an LLM to **route**: given a query and your catalog metadata, pick the top-K most relevant sites.
+When your catalog grows beyond ~5 sites, searching all of them for every query wastes time and tokens. vouch uses an LLM to **route**: given a query and your catalog metadata, pick the top-K most relevant sites.
 
 ```python
 engine = SearchEngine(
@@ -364,9 +364,9 @@ print(results.routing_decisions)
 
 ## Selector cache
 
-The first time farol visits a site, it spends an LLM call to figure out the search interface (where's the input? where's the submit? how do results render?). It caches what it learns in SQLite. **Subsequent searches on the same site use Playwright directly, with no LLM in the loop** — milliseconds, $0.
+The first time vouch visits a site, it spends an LLM call to figure out the search interface (where's the input? where's the submit? how do results render?). It caches what it learns in SQLite. **Subsequent searches on the same site use Playwright directly, with no LLM in the loop** — milliseconds, $0.
 
-The cache is keyed by `(domain, dom_fingerprint)`. If the site redesigns and the cached selectors fail, farol invalidates the entry and re-discovers automatically.
+The cache is keyed by `(domain, dom_fingerprint)`. If the site redesigns and the cached selectors fail, vouch invalidates the entry and re-discovers automatically.
 
 ```python
 # First search on cvm.gov.br: ~8s, $0.01 (LLM discovery)
@@ -383,14 +383,14 @@ engine.cache_stats()
 engine.invalidate_cache("cvm.gov.br")
 ```
 
-The cache lives at `~/.farol/selectors.db` — a tiny SQLite file you can ship in version control if you want a head-start for teammates.
+The cache lives at `~/.vouch/selectors.db` — a tiny SQLite file you can ship in version control if you want a head-start for teammates.
 
 ## Profile registry
 
-farol ships with **curated profiles** for popular sites — preconfigured `Site` objects with the right `search_url_template`, tags, and category. You don't have to figure out arxiv's search URL or how to phrase HuggingFace's description.
+vouch ships with **curated profiles** for popular sites — preconfigured `Site` objects with the right `search_url_template`, tags, and category. You don't have to figure out arxiv's search URL or how to phrase HuggingFace's description.
 
 ```python
-from farol import SearchEngine, get_profile, list_profiles
+from vouch import SearchEngine, get_profile, list_profiles
 
 engine = SearchEngine(llm="ollama/qwen2.5:14b")
 
@@ -415,19 +415,19 @@ results = engine.search("LLM benchmarks 2026")
 Or via CLI:
 
 ```bash
-farol profiles list                      # show bundled profiles
-farol profiles show arxiv.org            # see one in detail
-farol profiles import arxiv.org,github.com,huggingface.co
-farol profiles import all                # add everything to your local catalog
+vouch profiles list                      # show bundled profiles
+vouch profiles show arxiv.org            # see one in detail
+vouch profiles import arxiv.org,github.com,huggingface.co
+vouch profiles import all                # add everything to your local catalog
 ```
 
-The profile YAML lives at [`farol/profiles/builtin.yaml`](farol/profiles/builtin.yaml). Community contributions via PR welcome — see the [`new_profile`](.github/ISSUE_TEMPLATE/new_profile.md) issue template.
+The profile YAML lives at [`vouch/profiles/builtin.yaml`](vouch/profiles/builtin.yaml). Community contributions via PR welcome — see the [`new_profile`](.github/ISSUE_TEMPLATE/new_profile.md) issue template.
 
-A separate community-maintained registry (`farol-profiles` repo) is on the roadmap; teams can publish their domain-specific profiles there and run `farol profiles update` to pull them.
+A separate community-maintained registry (`vouch-profiles` repo) is on the roadmap; teams can publish their domain-specific profiles there and run `vouch profiles update` to pull them.
 
 ## LLM configuration (BYOK)
 
-farol uses [LiteLLM](https://github.com/BerriAI/litellm) underneath, which means **any of 100+ providers** work with the same syntax.
+vouch uses [LiteLLM](https://github.com/BerriAI/litellm) underneath, which means **any of 100+ providers** work with the same syntax.
 
 ### Local (Ollama, LM Studio)
 
@@ -491,13 +491,13 @@ engine = SearchEngine(
 
 ## Using as an agent tool
 
-farol's primary audience is agentic frameworks. First-class adapters:
+vouch's primary audience is agentic frameworks. First-class adapters:
 
 ### CrewAI
 
 ```python
 from crewai import Agent, Task, Crew
-from farol.integrations.crewai import CurioSearchTool
+from vouch.integrations.crewai import CurioSearchTool
 
 search_tool = CurioSearchTool(catalog="sites.yaml", default_depth=2)
 
@@ -513,7 +513,7 @@ researcher = Agent(
 
 ```python
 from langchain.agents import AgentExecutor
-from farol.integrations.langchain import CurioSearchTool
+from vouch.integrations.langchain import CurioSearchTool
 
 tools = [CurioSearchTool.from_yaml("sites.yaml")]
 agent = AgentExecutor(tools=tools, ...)
@@ -523,15 +523,15 @@ agent = AgentExecutor(tools=tools, ...)
 
 ```python
 from pydantic_ai import Agent
-from farol.integrations.pydantic_ai import farol_tool
+from vouch.integrations.pydantic_ai import vouch_tool
 
-agent = Agent("anthropic:claude-sonnet-4-6", tools=[farol_tool("sites.yaml")])
+agent = Agent("anthropic:claude-sonnet-4-6", tools=[vouch_tool("sites.yaml")])
 ```
 
 ### MCP server (Claude Desktop, Cursor, Cline)
 
 ```bash
-farol mcp serve --catalog sites.yaml
+vouch mcp serve --catalog sites.yaml
 ```
 
 Configure in `claude_desktop_config.json`:
@@ -539,8 +539,8 @@ Configure in `claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
-    "farol": {
-      "command": "farol",
+    "vouch": {
+      "command": "vouch",
       "args": ["mcp", "serve", "--catalog", "/path/to/sites.yaml"]
     }
   }
@@ -588,7 +588,7 @@ Optional, opt-in, multi-backend. Two tiers used in order from cheapest to heavie
 CPU-only, ~50-200 ms per image, $0, no GPU, no model download.
 
 ```bash
-pip install "farol[ocr]"
+pip install "vouch[ocr]"
 # plus the system binary:
 #   Ubuntu/Debian: sudo apt install tesseract-ocr tesseract-ocr-por tesseract-ocr-spa
 #   macOS:         brew install tesseract tesseract-lang
@@ -625,7 +625,7 @@ result.suggestion  # "Use the official API: https://..."
 Watch sites for changes, get notified.
 
 ```python
-from farol import Monitor
+from vouch import Monitor
 
 monitor = Monitor(engine)
 monitor.watch(
@@ -642,7 +642,7 @@ Uses 3-tier change detection: hash → diff → embedding similarity. **Avoids L
 ### FastAPI dashboard
 
 ```bash
-farol serve --port 8080
+vouch serve --port 8080
 # → web UI at http://localhost:8080
 # → manage catalog, view cache, run searches, see costs
 ```
@@ -675,7 +675,7 @@ SearchEngine(
     headless: bool = True,
     
     # Caching
-    cache_dir: str = "~/.farol",
+    cache_dir: str = "~/.vouch",
     cache_ttl_days: int = 30,
     
     # Politeness
@@ -688,7 +688,7 @@ SearchEngine(
     captcha_max_attempts: int = 2,
     
     # Misc
-    cache_dir: str = "~/.farol",
+    cache_dir: str = "~/.vouch",
     verbose: bool = False,
 )
 ```
@@ -786,7 +786,7 @@ Chunk(
 ### Module layout
 
 ```
-farol/
+vouch/
 ├── __init__.py            # public API: search, SearchEngine, Site
 ├── engine.py              # SearchEngine orchestrator
 ├── catalog.py             # Site model, Catalog (SQLite)
@@ -869,7 +869,7 @@ Searches across multiple sites run in parallel (controlled by `parallel_sites`).
 
 ## Limits and what's out of scope
 
-farol is opinionated about what it tries to do and what it doesn't.
+vouch is opinionated about what it tries to do and what it doesn't.
 
 **What's in scope:**
 - Public sites that respond well to standard web requests
@@ -879,10 +879,10 @@ farol is opinionated about what it tries to do and what it doesn't.
 - Educational, research, regulatory, professional use cases
 
 **What's explicitly out of scope:**
-- **Bypassing Cloudflare's modern bot protection** (Turnstile invisible, Bot Fight Mode aggressive). farol includes humanize and stealth options that help with mild detection, but no open-source library reliably defeats current Cloudflare. For those cases, plug a commercial bypass service (Browserbase, Bright Data, ZenRows) via the `behavior="external"` site option.
-- **Mass scraping** — farol is built for "search across my list of trusted sources", not "scrape the entire web."
+- **Bypassing Cloudflare's modern bot protection** (Turnstile invisible, Bot Fight Mode aggressive). vouch includes humanize and stealth options that help with mild detection, but no open-source library reliably defeats current Cloudflare. For those cases, plug a commercial bypass service (Browserbase, Bright Data, ZenRows) via the `behavior="external"` site option.
+- **Mass scraping** — vouch is built for "search across my list of trusted sources", not "scrape the entire web."
 - **CAPTCHA solving as a sales pitch.** The optional vision-LLM CAPTCHA assist is best-effort and only works on simple visual challenges. It won't (and shouldn't) work on adversarial challenges.
-- **Logged-in personal accounts (LinkedIn, Instagram, etc.)** — even when technically possible, this is usually a ToS violation. farol supports authentication for sites where it's legitimate (gov portals, enterprise dashboards you own), not for this.
+- **Logged-in personal accounts (LinkedIn, Instagram, etc.)** — even when technically possible, this is usually a ToS violation. vouch supports authentication for sites where it's legitimate (gov portals, enterprise dashboards you own), not for this.
 
 This isn't a limitation we apologize for — it's the position. A library that promises to bypass everything breaks every week and isn't sustainable as open-source.
 
@@ -920,8 +920,8 @@ This isn't a limitation we apologize for — it's the position. A library that p
 See [`CONTRIBUTING.md`](CONTRIBUTING.md). Quick start for dev:
 
 ```bash
-git clone https://github.com/YOURUSER/farol
-cd farol
+git clone https://github.com/YOURUSER/vouch
+cd vouch
 python -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev,all]"
 playwright install chromium
@@ -936,13 +936,13 @@ Issues, PRs, ideas welcome. Especially:
 
 ## References and prior art
 
-farol stands on the shoulders of these projects. Read their docs — most of them solve adjacent problems brilliantly.
+vouch stands on the shoulders of these projects. Read their docs — most of them solve adjacent problems brilliantly.
 
 ### Direct inspiration
 
-- **[Tavily](https://tavily.com)** & **[Exa](https://exa.ai)** — defined the "search API for agents" category. farol is "Tavily, but for your own sources."
-- **[Kagi Lenses](https://help.kagi.com/kagi/features/lenses.html)** & **[Brave Goggles](https://search.brave.com/help/goggles)** — proved curated-source search is a real product. farol brings it to OSS.
-- **[Skyvern](https://github.com/Skyvern-AI/skyvern)** — pioneered "discover-then-cache" for browser automation. farol applies the same pattern to search specifically.
+- **[Tavily](https://tavily.com)** & **[Exa](https://exa.ai)** — defined the "search API for agents" category. vouch is "Tavily, but for your own sources."
+- **[Kagi Lenses](https://help.kagi.com/kagi/features/lenses.html)** & **[Brave Goggles](https://search.brave.com/help/goggles)** — proved curated-source search is a real product. vouch brings it to OSS.
+- **[Skyvern](https://github.com/Skyvern-AI/skyvern)** — pioneered "discover-then-cache" for browser automation. vouch applies the same pattern to search specifically.
 - **[Stagehand](https://github.com/browserbase/stagehand)** — `act()` / `observe()` API inspired the discovery layer.
 
 ### Building blocks used
@@ -982,6 +982,6 @@ MIT — see [`LICENSE`](LICENSE).
 
 ## Acknowledgments
 
-Built by [@yourhandle](https://github.com/yourhandle) as a portfolio project exploring the gap between agent search APIs and browser automation. Feedback and contributions welcome.
+Built by [@everton-evton](https://github.com/everton-evton) as a portfolio project exploring the gap between agent search APIs and browser automation. Feedback and contributions welcome.
 
-If farol helps you, a ⭐ on GitHub goes a long way.
+If vouch helps you, a ⭐ on GitHub goes a long way.

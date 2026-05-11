@@ -1,12 +1,12 @@
-# Contributing to farol
+# Contributing to vouch
 
-Thanks for considering a contribution. farol is an early-stage project — issues, PRs, and ideas are all welcome.
+Thanks for considering a contribution. vouch is an early-stage project — issues, PRs, and ideas are all welcome.
 
 ## Development setup
 
 ```bash
-git clone https://github.com/yourhandle/farol
-cd farol
+git clone https://github.com/everton-evton/vouch
+cd vouch
 python -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -e ".[dev,all]"

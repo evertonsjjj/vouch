@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from farol.extraction.llm_extract import looks_low_quality
-from farol.models import Chunk
+from vouch.extraction.llm_extract import looks_low_quality
+from vouch.models import Chunk
 
 
 def _chunk(url: str, title: str = "Pretty long real result title") -> Chunk:
