@@ -10,10 +10,12 @@ runner = CliRunner()
 
 
 def test_version():
+    from vouch import __version__
+
     r = runner.invoke(app, ["--version"])
     assert r.exit_code == 0
     assert "vouch" in r.stdout
-    assert "0.2.0" in r.stdout
+    assert __version__ in r.stdout
 
 
 def test_no_args_shows_help():

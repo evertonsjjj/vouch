@@ -5,27 +5,76 @@ All notable changes to **vouch** are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 this project follows [Semantic Versioning](https://semver.org/).
 
+## [0.2.1] — 2026-05-11
+
+Pre-launch consistency pass. No behavior changes; all updates are documentation
+accuracy, type-checking hygiene, and a soft method rename with a back-compat
+alias. Safe upgrade from 0.2.0.
+
+### Deprecated
+
+- ``Catalog.list()`` and ``SearchEngine.list()`` renamed to ``list_sites()``.
+  The old names still work as aliases through v0.x. The rename avoids shadowing
+  the ``list`` builtin in class-scope type annotations (broke strict mypy).
+  Will be removed in v1.0.
+- ``CurioSearchTool`` (in ``vouch.integrations.crewai`` and
+  ``vouch.integrations.langchain``) renamed to ``VouchSearchTool`` with the
+  old name kept as an alias. Same v1.0 removal timeline as ``CurioError``.
+
+### Documentation
+
+- Removed unimplemented humanize claims from the README ("Bezier-curve mouse
+  movement", "User-agent rotation"). The code never had either; replaced with
+  what the ``humanize`` module actually does (lognormal pauses, typo injection,
+  business-hours gating, single per-session UA).
+- Install snippet split out ``[mcp]`` and ``[ocr]`` as separate extras; the
+  ``[server]`` extra no longer claims to include the MCP server.
+- ``[all]`` documented as "everything above" — framework integrations
+  (``[crewai]`` / ``[langchain]`` / ``[pydantic-ai]``) ship as separate extras
+  to avoid pulling in heavy dep trees by default.
+- ``[vision]`` clarified as "image handling" (Pillow); the vision LLM itself
+  comes from LiteLLM (already in core deps).
+- Module-layout tree filled out (was missing ~12 files: models, config,
+  exceptions, dns_resolver, plugins, browser_pool, probe, css_selectors,
+  llm_extract, profiles/*, captcha/*, monitor/*).
+- "Real numbers from internal benchmarks" softened with caveats; pointer to
+  reproducible scripts in ``examples/``.
+- Test count corrected (57 → 117).
+- README acknowledgments reframed away from "portfolio project" toward
+  "early-stage open source looking for contributors".
+- Clarified that ``vouch profiles update`` requires internet and falls back
+  to bundled profiles on any network failure.
+
+### Internal
+
+- ``mypy vouch/`` now passes cleanly (0 errors, down from 59).
+  - Counter type annotation in ``_lang.py``.
+  - ``catalog._hooks`` typed as ``dict[str, dict[str, Callable | None]]``.
+  - ``_template_path`` asserts the caller-side invariant for ``search_url_template``.
+  - One-shot ``search(sites=...)`` accepts ``Sequence[str | Site]`` (was
+    invariant ``list[str | Site]``).
+  - Two SQLAlchemy ``Column[datetime]`` assignment lines suppressed with
+    targeted ``# type: ignore[assignment]``.
+  - Dead ``TypeError`` fallback in ``plugins._load`` dropped — the only
+    supported Python (3.10+) doesn't reach it.
+- ``warn_unused_ignores`` set to ``false`` in the mypy config since optional
+  integration imports legitimately need ``# type: ignore`` in environments
+  that lack the extra.
+- ``types-PyYAML`` added to dev deps.
+
 ## [0.2.0] — 2026-05-10
 
 ### Renamed
 
 - **Package renamed from ``curio`` to ``vouch``** to avoid conflict with the
   existing ``curio`` async library on PyPI. The old ``CurioError`` exception
-  and ``CurioSearchTool`` integrations are kept as back-compat aliases of
-  ``VouchError`` / ``VouchSearchTool`` and will be removed in v1.0. Update
-  your imports::
+  is kept as a back-compat alias of ``VouchError`` and will be removed in
+  v1.0. Update your imports::
 
       # before
       from curio import SearchEngine
       # after
       from vouch import SearchEngine
-
-### Deprecated
-
-- ``Catalog.list()`` and ``SearchEngine.list()`` renamed to ``list_sites()``.
-  The old names still work as aliases through v0.x; they shadowed the
-  ``list`` builtin inside class-scope type annotations, which broke strict
-  type-checking. Will be removed in v1.0.
 
 ### Added
 
@@ -133,5 +182,6 @@ this project follows [Semantic Versioning](https://semver.org/).
 - CrewAI / LangChain / PydanticAI / MCP integrations.
 - Optional vision-LLM CAPTCHA solver, APScheduler change monitor.
 
+[0.2.1]: https://github.com/evertonsjjj/vouch/releases/tag/v0.2.1
 [0.2.0]: https://github.com/evertonsjjj/vouch/releases/tag/v0.2.0
 [0.1.0]: https://github.com/evertonsjjj/vouch/releases/tag/v0.1.0
