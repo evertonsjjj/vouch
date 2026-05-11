@@ -428,7 +428,7 @@ vouch profiles import all                # add everything to your local catalog
 
 The profile YAML lives at [`vouch/profiles/builtin.yaml`](vouch/profiles/builtin.yaml). Community contributions via PR welcome — see the [`new_profile`](.github/ISSUE_TEMPLATE/new_profile.md) issue template.
 
-A separate community-maintained registry (`vouch-profiles` repo) is on the roadmap; teams can publish their domain-specific profiles there and run `vouch profiles update` to pull them.
+A separate community-maintained registry (`vouch-profiles` repo) is on the roadmap; teams can publish their domain-specific profiles there and run `vouch profiles update` to pull them. The update command needs internet access — it falls back silently to the bundled profiles on any network failure, so air-gapped installs keep working.
 
 ## LLM configuration (BYOK)
 

@@ -11,15 +11,23 @@ this project follows [Semantic Versioning](https://semver.org/).
 
 - **Package renamed from ``curio`` to ``vouch``** to avoid conflict with the
   existing ``curio`` async library on PyPI. The old ``CurioError`` exception
-  is kept as a back-compat alias of ``VouchError`` and will be removed in
-  v1.0. Update your imports::
+  and ``CurioSearchTool`` integrations are kept as back-compat aliases of
+  ``VouchError`` / ``VouchSearchTool`` and will be removed in v1.0. Update
+  your imports::
 
       # before
       from curio import SearchEngine
       # after
       from vouch import SearchEngine
 
-### Added (continued)
+### Deprecated
+
+- ``Catalog.list()`` and ``SearchEngine.list()`` renamed to ``list_sites()``.
+  The old names still work as aliases through v0.x; they shadowed the
+  ``list`` builtin inside class-scope type annotations, which broke strict
+  type-checking. Will be removed in v1.0.
+
+### Added
 
 - **Browser pool** — one long-lived Chromium process per engine, shared
   across every search. Eliminates the per-call launch overhead (~3-8 s warm,
@@ -47,9 +55,6 @@ this project follows [Semantic Versioning](https://semver.org/).
   on low confidence → return best result. Image-grid CAPTCHAs still need a
   vision LLM (``ollama/qwen2.5vl:7b`` recommended). ``CaptchaResult`` gains
   a ``solver`` field showing which backend produced the answer.
-
-### Added
-
 - **CSS selector pinning** — the result-extraction LLM now examines DOM context
   (ancestor tag chain, sibling tags, full HTML of one candidate card) and emits
   reusable CSS selector tuples (`container`, `title`, `url`, `snippet`, `date`,
@@ -89,8 +94,9 @@ this project follows [Semantic Versioning](https://semver.org/).
 - **Browser stability on Windows** — process-wide
   `threading.Semaphore(_MAX_PARALLEL_BROWSERS=1)` gates concurrent Chromium
   launches; cleanup is now exception-safe.
-- **57 unit tests** covering catalog, router, engine, cache, extraction,
-  CSS selectors, quality detector, language detection, DNS resolver, models.
+- **117 unit tests** covering catalog, router, engine, cache, extraction,
+  CSS selectors, quality detector, language detection, DNS resolver, models,
+  CLI, profiles, plugins, async API, and integrations.
 
 ### Changed
 
