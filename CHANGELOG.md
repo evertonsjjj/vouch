@@ -5,6 +5,21 @@ All notable changes to **vouch** are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 this project follows [Semantic Versioning](https://semver.org/).
 
+## [0.2.2] — 2026-05-11
+
+Doc-only patch. No code changes; same wheel contents as 0.2.1 plus the
+README fixes below.
+
+### Documentation
+
+- Fix ``YOURUSER`` placeholder in the Contributing snippet — now points
+  at the real ``evertonsjjj/vouch`` clone URL.
+- Rewrite the Roadmap section. The previous version listed change
+  monitoring, FastAPI dashboard, and stealth mode under "v0.3" as if they
+  were upcoming, but all three actually shipped in v0.2. New structure
+  separates "Shipped" (with a pointer to CHANGELOG for detail) from
+  "Coming next" (genuinely forward-looking items only).
+
 ## [0.2.1] — 2026-05-11
 
 Pre-launch consistency pass. No behavior changes; all updates are documentation
@@ -182,6 +197,7 @@ alias. Safe upgrade from 0.2.0.
 - CrewAI / LangChain / PydanticAI / MCP integrations.
 - Optional vision-LLM CAPTCHA solver, APScheduler change monitor.
 
+[0.2.2]: https://github.com/evertonsjjj/vouch/releases/tag/v0.2.2
 [0.2.1]: https://github.com/evertonsjjj/vouch/releases/tag/v0.2.1
 [0.2.0]: https://github.com/evertonsjjj/vouch/releases/tag/v0.2.0
 [0.1.0]: https://github.com/evertonsjjj/vouch/releases/tag/v0.1.0

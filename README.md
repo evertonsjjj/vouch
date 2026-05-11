@@ -914,39 +914,36 @@ This isn't a limitation we apologize for — it's the position. A library that p
 
 ## Roadmap
 
-**v0.1 (initial release):**
-- Levels 1–3 API
-- HTTP + browser adapters
-- LLM router (single strategy)
-- Selector cache
-- Ollama + major API providers via LiteLLM
-- CrewAI + LangChain integrations
-- CLI
+**Shipped** (see [CHANGELOG.md](CHANGELOG.md) for the full list):
 
-**v0.2:**
-- Embedding router
-- Vision-LLM CAPTCHA assist
-- MCP server
-- PydanticAI integration
+- v0.1 — Levels 1-3 API, HTTP + browser adapters, LLM router, selector
+  cache, BYOK via LiteLLM, CrewAI + LangChain integrations, CLI.
+- v0.2 — embedding/tag/all routers, vision-LLM + Tesseract CAPTCHA assist,
+  MCP server, PydanticAI integration, browser pool, plugin model via
+  entry_points, profile registry + auto-update, async API, FastAPI
+  dashboard, stealth mode (patchright), change monitor, auto-escalation
+  ladder, auto-DNS resolution, quality detector, CSS selector pinning,
+  Accept-Language header.
 
-**v0.3:**
-- Change monitoring
-- FastAPI dashboard
-- Stealth mode (patchright)
-- Auth flow helpers
+**Coming next** (no committed dates — direction shaped by feedback and
+real use cases):
 
-**v0.4+:**
-- Distributed search workers
-- Built-in vector DB for content reuse
-- Better PDF extraction (Docling)
-- Workflow chains (search → reason → search)
+- Auth flow helpers for sites that legitimately need a login
+  (cookie persistence, refresh-token rotation)
+- Distributed search workers (multi-machine fanout for large catalogs)
+- Built-in vector store for chunk reuse across queries
+- Docling-backed PDF extraction
+- Workflow chains (search → reason → search → extract)
+- Standalone community profile registry repo (`vouch-profiles`)
+- Per-site adapter packages on PyPI (`vouch-adapter-*`) as the plugin
+  ecosystem matures
 
 ## Contributing
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md). Quick start for dev:
 
 ```bash
-git clone https://github.com/YOURUSER/vouch
+git clone https://github.com/evertonsjjj/vouch
 cd vouch
 python -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev,all]"
