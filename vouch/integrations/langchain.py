@@ -23,7 +23,7 @@ class _Input(BaseModel):
     depth: int = Field(1, ge=0, le=3)
 
 
-class CurioSearchTool(BaseTool):
+class VouchSearchTool(BaseTool):
     name: str = "vouch_search"
     description: str = _DEFAULT_DESCRIPTION
     args_schema: type = _Input
@@ -38,7 +38,7 @@ class CurioSearchTool(BaseTool):
         self.engine = build_engine(catalog, **engine_kwargs)
 
     @classmethod
-    def from_yaml(cls, path: str | Path, **kwargs) -> CurioSearchTool:
+    def from_yaml(cls, path: str | Path, **kwargs) -> VouchSearchTool:
         return cls(catalog=path, **kwargs)
 
     def _run(self, query: str, depth: int = 1) -> str:  # type: ignore[override]
@@ -52,4 +52,8 @@ class CurioSearchTool(BaseTool):
         return await asyncio.to_thread(self._run, query, depth)
 
 
-__all__ = ["CurioSearchTool"]
+# Back-compat alias for v0.1 users who imported ``CurioSearchTool``. Will be
+# removed in v1.0.
+CurioSearchTool = VouchSearchTool
+
+__all__ = ["CurioSearchTool", "VouchSearchTool"]

@@ -108,10 +108,15 @@ Optional extras:
 
 ```bash
 pip install "vouch[browser,stealth]"     # patchright for harder sites
-pip install "vouch[browser,vision]"      # CAPTCHA assist via vision LLM
+pip install "vouch[browser,ocr]"         # Tesseract CAPTCHA tier (CPU, no GPU)
+pip install "vouch[browser,vision]"      # image handling for vision-LLM CAPTCHA
 pip install "vouch[browser,monitor]"     # APScheduler for change tracking
-pip install "vouch[browser,server]"      # FastAPI dashboard + MCP server
-pip install "vouch[all]"                 # everything
+pip install "vouch[browser,server]"      # FastAPI dashboard
+pip install "vouch[mcp]"                 # MCP server (Claude Desktop, Cursor)
+pip install "vouch[all]"                 # everything above
+pip install "vouch[crewai]"              # framework integrations (separate)
+pip install "vouch[langchain]"
+pip install "vouch[pydantic-ai]"
 ```
 
 **Requirements:** Python 3.10+. Linux, macOS, or Windows. ~500MB disk after `install-browser`.
@@ -497,9 +502,9 @@ vouch's primary audience is agentic frameworks. First-class adapters:
 
 ```python
 from crewai import Agent, Task, Crew
-from vouch.integrations.crewai import CurioSearchTool
+from vouch.integrations.crewai import VouchSearchTool
 
-search_tool = CurioSearchTool(catalog="sites.yaml", default_depth=2)
+search_tool = VouchSearchTool(catalog="sites.yaml", default_depth=2)
 
 researcher = Agent(
     role="Financial Regulation Researcher",
@@ -513,9 +518,9 @@ researcher = Agent(
 
 ```python
 from langchain.agents import AgentExecutor
-from vouch.integrations.langchain import CurioSearchTool
+from vouch.integrations.langchain import VouchSearchTool
 
-tools = [CurioSearchTool.from_yaml("sites.yaml")]
+tools = [VouchSearchTool.from_yaml("sites.yaml")]
 agent = AgentExecutor(tools=tools, ...)
 ```
 
@@ -567,8 +572,8 @@ engine = SearchEngine(
 What it does:
 - Lognormal pause distribution between actions (60–250ms typing, 0.5–3s reading)
 - Random typo injection with backspace correction (~2% rate)
-- Bezier-curve mouse movement to click targets
-- User-agent rotation from real recent Chrome versions
+- Optional business-hours-only execution (`business_hours_only=True`)
+- Single, recent Chrome user-agent applied per session (no rotation)
 
 ### Stealth mode (per site)
 
@@ -836,7 +841,7 @@ No CrewAI/LangChain/etc as hard deps. They're integration extras only.
 
 ## Cost and performance
 
-Real numbers from internal benchmarks (your mileage will vary):
+Typical numbers from internal runs. Depend heavily on LLM, network, site, and cache state — treat as rough order-of-magnitude, not a guarantee. Reproducible benchmark scripts under `examples/` if you want to validate on your stack.
 
 ### Per-search costs
 

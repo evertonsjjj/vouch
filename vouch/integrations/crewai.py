@@ -24,8 +24,8 @@ class _Input(BaseModel):
     depth: int = Field(1, ge=0, le=3, description="Cost/quality knob: 0–3")
 
 
-class CurioSearchTool(BaseTool):
-    """Drop-in CrewAI tool: ``tools=[CurioSearchTool(catalog="sites.yaml")]``."""
+class VouchSearchTool(BaseTool):
+    """Drop-in CrewAI tool: ``tools=[VouchSearchTool(catalog="sites.yaml")]``."""
 
     name: str = "vouch_search"
     description: str = _DEFAULT_DESCRIPTION
@@ -49,4 +49,8 @@ class CurioSearchTool(BaseTool):
         return render_result(result)
 
 
-__all__ = ["CurioSearchTool"]
+# Back-compat alias for v0.1 users who imported ``CurioSearchTool``. Will be
+# removed in v1.0.
+CurioSearchTool = VouchSearchTool
+
+__all__ = ["CurioSearchTool", "VouchSearchTool"]
