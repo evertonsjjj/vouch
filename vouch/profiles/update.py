@@ -2,7 +2,7 @@
 
 The community registry lives at::
 
-    https://raw.githubusercontent.com/everton-evton/vouch-profiles/main/profiles.yaml
+    https://raw.githubusercontent.com/evertonsjjj/vouch-profiles/main/profiles.yaml
 
 (Or whatever URL is configured via ``VOUCH_PROFILES_URL`` / the
 ``--source`` flag to ``vouch profiles update``.)
@@ -31,7 +31,7 @@ log = logging.getLogger("vouch.profiles.update")
 
 DEFAULT_URL = os.environ.get(
     "VOUCH_PROFILES_URL",
-    "https://raw.githubusercontent.com/everton-evton/vouch-profiles/main/profiles.yaml",
+    "https://raw.githubusercontent.com/evertonsjjj/vouch-profiles/main/profiles.yaml",
 )
 
 CACHE_FILE = (

@@ -78,9 +78,9 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/everton-evton/vouch"
-Repository = "https://github.com/everton-evton/vouch"
-Issues = "https://github.com/everton-evton/vouch/issues"
+Homepage = "https://github.com/evertonsjjj/vouch"
+Repository = "https://github.com/evertonsjjj/vouch"
+Issues = "https://github.com/evertonsjjj/vouch/issues"
 
 [project.scripts]
 vouch = "vouch.cli:app"

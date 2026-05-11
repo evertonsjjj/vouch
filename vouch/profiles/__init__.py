@@ -9,7 +9,7 @@ A *profile* is a bundle of search-config for a single domain:
 
 Profiles ship with vouch for popular sites (arxiv, github, etc.) and users
 can publish/share their own. The community registry will live at
-``github.com/everton-evton/vouch-profiles`` and ``vouch profiles update``
+``github.com/evertonsjjj/vouch-profiles`` and ``vouch profiles update``
 pulls the latest.
 
 Public API::

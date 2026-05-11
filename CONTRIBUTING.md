@@ -5,7 +5,7 @@ Thanks for considering a contribution. vouch is an early-stage project — issue
 ## Development setup
 
 ```bash
-git clone https://github.com/everton-evton/vouch
+git clone https://github.com/evertonsjjj/vouch
 cd vouch
 python -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate

@@ -37,7 +37,7 @@ this project follows [Semantic Versioning](https://semver.org/).
   CLI: ``vouch plugins list``.
 - **Profile auto-update** — ``vouch profiles update`` fetches the latest
   community registry from a configurable URL (default
-  ``github.com/everton-evton/vouch-profiles``), validates the YAML, and merges
+  ``github.com/evertonsjjj/vouch-profiles``), validates the YAML, and merges
   it on top of the bundled ``builtin.yaml``. Honors HTTP caching
   (ETag / If-Modified-Since) and falls back gracefully to the bundled
   profiles on any network failure.
@@ -127,5 +127,5 @@ this project follows [Semantic Versioning](https://semver.org/).
 - CrewAI / LangChain / PydanticAI / MCP integrations.
 - Optional vision-LLM CAPTCHA solver, APScheduler change monitor.
 
-[0.2.0]: https://github.com/everton-evton/vouch/releases/tag/v0.2.0
-[0.1.0]: https://github.com/everton-evton/vouch/releases/tag/v0.1.0
+[0.2.0]: https://github.com/evertonsjjj/vouch/releases/tag/v0.2.0
+[0.1.0]: https://github.com/evertonsjjj/vouch/releases/tag/v0.1.0

@@ -1,6 +1,6 @@
 # Curated profiles bundled with vouch.
 # These are tested against real pages and known to produce clean results.
-# The community-maintained registry will live at github.com/everton-evton/vouch-profiles
+# The community-maintained registry will live at github.com/evertonsjjj/vouch-profiles
 # and `vouch profiles update` will pull updates.
 
 profiles:
